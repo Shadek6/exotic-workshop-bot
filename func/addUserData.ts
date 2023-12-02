@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb'
 import { getUserData } from './getUserData';
 import { logMessage } from './logMessage';
 import { client } from '../index';
-const uri = "mongodb+srv://Shadek:JJMLKOkrtYN1WLAK@cluster0.adjn4.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGO_URI!
 const mongoClient = new MongoClient(uri).db('exotic-workshop').collection('workers');
 
 export async function addUserData(USER_ID: string, CHAR_NAME: string, PHONE_NUMBER: string, ACCOUNT_NUMBER: string, interaction: ChatInputCommandInteraction) 
