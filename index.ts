@@ -24,11 +24,6 @@ client.on('interactionCreate', async (interaction: any) => {
         return 
     }
 
-    if(interaction.commandName === "open-ticket") {
-        createTuningTicket(interaction)
-        return
-    }
-
     if(interaction.commandName === "send-panel") {
         sendPanel(interaction)
         return
