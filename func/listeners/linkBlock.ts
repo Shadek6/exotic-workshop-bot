@@ -13,7 +13,8 @@ export function linkBlock() {
                 3,
                 message.author.username,
                 "Message Delete",
-                `Wiadomość o treści \`${message.content}\` została usunięta z kanału <#${message.channel.id}>`
+                `Wiadomość o treści \`${message.content}\` została usunięta z kanału <#${message.channel.id}>`,
+                message.author.id
             );
             await message.delete().then(() => {
                 message.channel.send(`<@!${message.author.id}>, nie możesz wysyłać takich linków!`).then((botMessage) => {

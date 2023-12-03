@@ -1,6 +1,6 @@
 import { GuildTextBasedChannel, EmbedBuilder } from "discord.js";
 import { client } from "../index";
-export async function logMessage(MessageType: number, UserName: string, UserAction: string, MessageContent: string) {
+export async function logMessage(MessageType: number, UserName: string, UserAction: string, MessageContent: string, UserID?: string) {
     const LOG_CHANNEL = client.channels.cache.get(process.env.LOG_CHANNEL!) as GuildTextBasedChannel;
 
     // 0 = Success 1 = Warning 2 = Error 3 = Info
@@ -32,6 +32,6 @@ export async function logMessage(MessageType: number, UserName: string, UserActi
     LOG_EMBED.addFields({ name: "**Action**", value: UserAction, inline: true });
     LOG_EMBED.addFields({ name: "**Description**", value: MessageContent, inline: false });
 
-    LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
+    UserID ? LOG_CHANNEL.send({ content: `<@!${UserID}>`, embeds: [LOG_EMBED] }) : LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
     return;
 }

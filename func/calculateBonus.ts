@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
 import { client } from "../index";
-import { getUserData } from "./getUserData";
+import { getUserData } from "./userData/getUserData";
 const ROLES_ID = [
     [process.env.ROOKIE_ID, 0.5],
     [process.env.EMPLOYEE_ID, 0.55],
