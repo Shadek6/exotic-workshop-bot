@@ -1,6 +1,6 @@
 import { GuildTextBasedChannel, EmbedBuilder } from "discord.js";
 import { client } from "../index";
-export async function logMessage(MessageType: number, MessageContent: string) 
+export async function logMessage(MessageType: number, UserName: string, UserAction: string, MessageContent: string) 
 {
     const LOG_CHANNEL = (client.channels.cache.get(process.env.LOG_CHANNEL!)) as GuildTextBasedChannel
     
@@ -30,7 +30,9 @@ export async function logMessage(MessageType: number, MessageContent: string)
         }
     }
 
-    LOG_EMBED.setDescription(MessageContent)
+    LOG_EMBED.addFields( { name: "**User**", value: UserName, inline: true})
+    LOG_EMBED.addFields( { name: "**Action**", value: UserAction, inline: true})
+    LOG_EMBED.addFields( { name: "**Description**", value: MessageContent, inline: false})
     
     LOG_CHANNEL.send({ embeds: [LOG_EMBED] })
     return

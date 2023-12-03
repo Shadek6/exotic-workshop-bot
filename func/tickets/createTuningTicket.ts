@@ -55,7 +55,7 @@ export async function createTuningTicket(interaction: ChatInputCommandInteractio
 
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
-        logMessage(3, `${interaction.user.username} stworzył ticket o nazwie ticket-${interaction.user.username}!`)
+        logMessage(3, interaction.user.username, "Tuning Ticket Creation", "Użytkownik stworzył Ticket w panelu `Tuning`")
 
         ticketChannel.send("@everyone").then((newMessage => {
             setTimeout(() => {

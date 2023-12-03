@@ -40,7 +40,7 @@ export async function createWorkTicket(interaction: ChatInputCommandInteraction 
 
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
-        logMessage(3, `${interaction.user.username} stworzył ticket o nazwie rekrutacja-${interaction.user.username}!`)
+        logMessage(3, interaction.user.username, "Work Ticket Creation", "Użytkownik stworzył Ticket w panelu `Praca`")
 
         ticketChannel.send("<@&1178743386610606153>").then((newMessage => {
             setTimeout(() => {
