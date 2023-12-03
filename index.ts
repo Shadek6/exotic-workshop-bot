@@ -5,15 +5,17 @@ import { addUserData } from './func/addUserData'
 import { createTuningTicket } from './func/tickets/createTuningTicket'
 import { initTicketClose } from './func/listeners/ticketButtons'
 import { sendPanel } from './func/tickets/sendPanel'
+import { linkBlock } from './func/listeners/linkBlock'
 export const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent] })
 
 initTicketClose()
+linkBlock()
 
 client.on('interactionCreate', async (interaction: any) => {
     if(!interaction.isChatInputCommand) return
 
     if(interaction.commandName === "premia") {
-        calculateBonus(interaction, interaction.options.getNumber("kwota"))
+        calculateBonus(interaction, interaction.options.getNumber("kwota"), interaction.options.getString("zwrot"))
         return 
     }
 

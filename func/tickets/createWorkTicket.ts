@@ -1,9 +1,9 @@
 import { ChatInputCommandInteraction, ChannelType, PermissionsBitField, EmbedBuilder, TextBasedChannel, ButtonBuilder, ActionRowBuilder, ButtonStyle, Interaction } from "discord.js"
 import { logMessage } from "../logMessage"
 
-export async function createTuningTicket(interaction: ChatInputCommandInteraction | Interaction) {
+export async function createWorkTicket(interaction: ChatInputCommandInteraction | Interaction) {
     interaction.guild!.channels.create({
-        name: `ticket-${interaction.user.username}`,
+        name: `rekrutacja-${interaction.user.username}`,
         type: ChannelType.GuildText,
         parent: "1178754969067847741",
         permissionOverwrites: [
@@ -16,37 +16,22 @@ export async function createTuningTicket(interaction: ChatInputCommandInteractio
                 allow: [PermissionsBitField.Flags.ViewChannel]
             },
             {
-                id: `${process.env.CEO_ID}`,
+                id: "1178743386610606153", // Team Role
                 allow: [PermissionsBitField.Flags.ViewChannel]
-            },
-            {
-                id: `${process.env.MANAGER_ID}`,
-                allow: [PermissionsBitField.Flags.ViewChannel]
-            },
-            {
-                id: `${process.env.EXPERIENCED_ID}`,
-                allow: [PermissionsBitField.Flags.ViewChannel]
-            },
-            {
-                id: `${process.env.EMPLOYEE_ID}`,
-                allow: [PermissionsBitField.Flags.ViewChannel]
-            },
-            {
-                id: `${process.env.ROOKIE_ID}`,
-                allow: [PermissionsBitField.Flags.ViewChannel]
-            },
+            }
+
         ]
     }).then((ticketChannel: TextBasedChannel) => {
         const WELCOME_EMBED = new EmbedBuilder()
-        .setAuthor( { name: "Zlecenie Tuningu"} )
-        .setTitle("**Wzór formularza tuningowego**")
-        .setDescription("```Imię i nazwisko właściciela:\nPojazd:\nTuning:\nNumer telefonu:```")
+        .setAuthor( { name: interaction.user.username } )
+        .setTitle("**Ticket rekrutacyjny**")
+        .setDescription("Witaj w tickecie, który rozpoczyna Twój proces rekrutacji! Na początek przedstaw swoją postać i wizję na grę w gronie naszych pracowników! Zachęcamy do przedstawienia głównie background postaci oraz głównych motywów, które nią kierują - zarazem można umieścić doświadczenie w przeszłości i po krótce przedstawić swoją aktywność! Powodzenia!")
         .setColor("Random")
         .setThumbnail("https://i.imgur.com/lBJ36PT.png?size=4096")
         .setTimestamp()
 
         const CLOSE_BUTTON = new ButtonBuilder()
-        .setCustomId("close-tuning-ticket")
+        .setCustomId("close-work-ticket")
         .setLabel("Zamknij Ticket")
         .setStyle(ButtonStyle.Danger)
 
@@ -55,9 +40,9 @@ export async function createTuningTicket(interaction: ChatInputCommandInteractio
 
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
-        logMessage(3, `${interaction.user.username} stworzył ticket o nazwie ticket-${interaction.user.username}!`)
+        logMessage(3, `${interaction.user.username} stworzył ticket o nazwie rekrutacja-${interaction.user.username}!`)
 
-        ticketChannel.send("@everyone").then((newMessage => {
+        ticketChannel.send("<@&1178743386610606153>").then((newMessage => {
             setTimeout(() => {
                 newMessage.delete()
             }, 1000)

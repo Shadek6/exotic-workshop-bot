@@ -1,6 +1,7 @@
 import { GuildChannel, Interaction } from "discord.js";
 import { client } from "../..";
 import { createTuningTicket } from "../tickets/createTuningTicket";
+import { createWorkTicket } from "../tickets/createWorkTicket";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function initTicketClose() 
@@ -8,11 +9,25 @@ export async function initTicketClose()
     client.on('interactionCreate', async (interaction: Interaction) => {
         if(!interaction.isButton()) return
 
+        // Open tickets depending on their ID
         if(interaction.component.label === "Tuning") {
             return createTuningTicket(interaction)
         }
 
-        if(interaction.component.label === "Zamknij Ticket") {
+        if(interaction.component.label === "Praca") {
+            return createWorkTicket(interaction)
+        }
+
+        // Close tickets
+        if(interaction.customId === "close-work-ticket") {
+            interaction.reply({ content: `Closing ticket in 1s...`, ephemeral: true})
+            setTimeout(() => {
+                interaction.channel!.delete()
+                return
+            }, 2000)
+        }
+
+        if(interaction.customId === "close-tuning-ticket") {
             interaction.reply({ content: "Closing ticket...", ephemeral: true }).then((message) => {
                 setTimeout(() => {
                     message.delete()
