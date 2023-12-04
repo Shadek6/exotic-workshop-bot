@@ -21,10 +21,10 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
     }
 
     const USER_GUILD = await client.guilds.fetch("1178742962138652712");
-    const fullUserInfo = await USER_GUILD.members.fetch(interaction.user.id);
+    const fullUserInfo = await USER_GUILD.members.cache.get(interaction.user.id);
 
     ROLES_ID.forEach((role) => {
-        const CURRENT_ROLE = fullUserInfo.roles.cache.find((r) => r.id === role[0]);
+        const CURRENT_ROLE = fullUserInfo?.roles.cache.find((r) => r.id === role[0]);
         const BONUS_CHANNEL = client.channels.cache.get("1178750239251890266") as GuildTextBasedChannel;
 
         if (CURRENT_ROLE != null) {
@@ -38,7 +38,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
                 .setColor("Random")
                 .setTitle("Premia")
                 .setThumbnail(`${interaction.user.avatarURL()}?size=4096`)
-                .setAuthor({ name: `${fullUserInfo.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
+                .setAuthor({ name: `${fullUserInfo?.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
                 .setTimestamp()
                 .addFields({ name: "**Premia**  <:premia:1180621991162683542>", value: `$${USER_PAYOUT}`, inline: true })
                 .addFields({ name: "**Kwota robocizny**  <:robocizna:1180621994715263158>", value: `$${passedNumber}`, inline: true })
