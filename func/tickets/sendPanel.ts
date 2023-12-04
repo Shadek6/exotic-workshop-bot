@@ -1,7 +1,16 @@
-import { Interaction, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, GuildMember, ChatInputCommandInteraction } from "discord.js";
 
-export async function sendPanel(interaction: Interaction) 
+export async function sendPanel(interaction: ChatInputCommandInteraction) 
 {
+    await interaction.guild?.members.fetch(interaction.user.id)
+    .then(async (member: GuildMember) => 
+    {
+        if (!member.roles.cache.find(role => role.id === process.env.CEO_ID)) {
+            interaction.reply({ content: "Nie posiadasz uprawnień do korzystania z tej komendy.", ephemeral: true })
+            return
+        }
+    })
+
     const PANEL_EMBED = new EmbedBuilder()
     .setTitle("Panel ticketów")
     .setDescription("Wybierz którąś z poniższych opcji w celu założenia ticketa.")

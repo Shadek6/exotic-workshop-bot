@@ -2,7 +2,6 @@ import "dotenv/config";
 import { Client, GatewayIntentBits } from "discord.js";
 import { calculateBonus } from "./func/calculateBonus";
 import { addUserData } from "./func/userData/addUserData";
-import { createTuningTicket } from "./func/tickets/createTuningTicket";
 import { initTicketClose } from "./func/listeners/ticketButtons";
 import { sendPanel } from "./func/tickets/sendPanel";
 import { linkBlock } from "./func/listeners/linkBlock";
@@ -23,13 +22,7 @@ client.on("interactionCreate", async (interaction: any) => {
     }
 
     if (interaction.commandName === "register") {
-        addUserData(
-            interaction.user.id,
-            interaction.options.getString("imie_nazwisko"),
-            interaction.options.getString("phone"),
-            interaction.options.getString("bank_acc"),
-            interaction
-        );
+        addUserData(interaction.user.id, interaction.options.getString("imie_nazwisko"), interaction.options.getString("phone"), interaction.options.getString("bank_acc"), interaction);
         return;
     }
 
