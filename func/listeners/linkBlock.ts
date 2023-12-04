@@ -1,7 +1,6 @@
 import { Message, TextBasedChannel } from "discord.js";
 import { client } from "../../index";
 import { logMessage } from "../logMessage";
-
 export function linkBlock() {
     client.on("messageCreate", async (message: Message) => {
         const MESSAGE_AUTHOR = await message.guild!.members.fetch(message.author.id);
@@ -15,13 +14,7 @@ export function linkBlock() {
             const channel = message.channel as TextBasedChannel;
 
             // Log the deleted message
-            logMessage(
-                3,
-                message.author.username,
-                "Message Delete",
-                `Wiadomość o treści \`${message.content}\` została usunięta z kanału <#${channel.id}>`,
-                message.author.id
-            );
+            logMessage(3, message.author.username, "Message Delete", `Wiadomość o treści \`${message.content}\` została usunięta z kanału <#${channel.id}>`, message.author.id);
 
             // Delete the message and send a warning message to the channel
             await message.delete();
