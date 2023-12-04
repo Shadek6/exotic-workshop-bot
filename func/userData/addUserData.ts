@@ -9,6 +9,12 @@ const mongoClient = new MongoClient(uri).db("exotic-workshop").collection("worke
 export async function addUserData(USER_ID: string, CHAR_NAME: string, PHONE_NUMBER: string, ACCOUNT_NUMBER: string, interaction: ChatInputCommandInteraction) {
     const CONTACT_CHANNEL = client.channels.cache.get(process.env.CONTACT_CHANNEL!) as GuildTextBasedChannel;
 
+    if (await interaction.guild?.members.fetch(USER_ID).then((member) => member.roles.cache.has(process.env.WORKER_ROLE!))) {
+        interaction.reply({ content: `Nie posiadasz odpowiedniej roli, która pozwoliłaby na wywołanie tej komendy!`, ephemeral: true });
+        logMessage(2, interaction.user.username, "Register Error", `Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!`, interaction.user.id);
+        return;
+    }
+
     if (await getUserData(interaction.user.id)) {
         interaction.reply({
             content: `Posiadasz aktywny wpis w bazie danych użytkowników! Jeżeli uważasz, że to błąd, skontaktuj się z właścicielami w celu usunięcia!`,

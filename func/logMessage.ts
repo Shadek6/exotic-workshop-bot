@@ -1,5 +1,6 @@
 import { GuildTextBasedChannel, EmbedBuilder } from "discord.js";
 import { client } from "../index";
+
 export async function logMessage(MessageType: number, UserName: string, UserAction: string, MessageContent: string, UserID?: string) {
     const LOG_CHANNEL = client.channels.cache.get(process.env.LOG_CHANNEL!) as GuildTextBasedChannel;
 
