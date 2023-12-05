@@ -4,14 +4,14 @@ import { calculateBonus } from "./func/calculateBonus";
 import { addUserData } from "./func/userData/addUserData";
 import { initTicketClose } from "./func/listeners/ticketButtons";
 import { sendPanel } from "./func/tickets/sendPanel";
-import { linkBlock } from "./func/listeners/linkBlock";
 import { removeUserData } from "./func/userData/removeUserData";
+import { initMessagesEvents } from "./func/events/initMessagesEvents";
 export const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent],
 });
 
 initTicketClose();
-linkBlock();
+initMessagesEvents();
 
 client.on("interactionCreate", async (interaction: any) => {
     if (!interaction.isChatInputCommand) return;
@@ -23,7 +23,7 @@ client.on("interactionCreate", async (interaction: any) => {
     if (interaction.commandName === "send-panel") sendPanel(interaction);
 
     if (interaction.commandName === "unregister") removeUserData(interaction.options.getString("user_id"), interaction);
-    
+
 });
 
 client.login(process.env.TOKEN);
