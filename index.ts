@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Client, GatewayIntentBits } from "discord.js";
 import { calculateBonus } from "./func/calculateBonus";
 import { addUserData } from "./func/userData/addUserData";
-import { initTicketClose } from "./func/listeners/ticketButtons";
+import { initButtonsListener } from "./func/listeners/initButtonsListener";
 import { sendPanel } from "./func/tickets/sendPanel";
 import { removeUserData } from "./func/userData/removeUserData";
 import { initMessagesEvents } from "./func/events/initMessagesEvents";
@@ -10,7 +10,7 @@ export const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent],
 });
 
-initTicketClose();
+initButtonsListener();
 initMessagesEvents();
 
 client.on("interactionCreate", async (interaction: any) => {

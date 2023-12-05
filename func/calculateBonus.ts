@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder,  GuildTextBasedChannel } from "discord.js";
 import { client } from "../index";
 import { getUserData } from "./userData/getUserData";
 const ROLES_ID = [
@@ -25,32 +25,42 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
     ROLES_ID.forEach((role) => {
         const CURRENT_ROLE = fullUserInfo?.roles.cache.find((r) => r.id === role[0]);
         const BONUS_CHANNEL = client.channels.cache.get("1178750239251890266") as GuildTextBasedChannel;
+        const NOW_DATE = new Date(Date.now()).toLocaleDateString("pl-PL")
+        const NOW_HOURS = new Date().getUTCHours()
+        const NOW_MINUTES = new Date().getUTCMinutes()
 
         if (CURRENT_ROLE != null) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const USER_PERCENT: any = role[1]!;
-            const USER_PAYOUT = toReturn === "false" ? passedNumber * USER_PERCENT : passedNumber;
-            toReturn === "true" ? (toReturn = "✅") : (toReturn = "❎");
+            const USER_PAYOUT = toReturn === "false" ? Math.floor(passedNumber * USER_PERCENT) : passedNumber;
+            toReturn === "true" ? (toReturn = "TAK") : (toReturn = "NIE");
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const BONUS_EMBED = new EmbedBuilder()
                 .setColor("Random")
-                .setTitle("Premia")
-                .setThumbnail(`${interaction.user.avatarURL()}?size=4096`)
+                .setTitle(`Premia - ${USER_PERCENT * 100}%`)
                 .setAuthor({ name: `${fullUserInfo?.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
-                .setTimestamp()
-                .addFields({ name: "**Premia**  <:premia:1180621991162683542>", value: `$${USER_PAYOUT}`, inline: true })
-                .addFields({ name: "**Kwota robocizny**  <:robocizna:1180621994715263158>", value: `$${passedNumber}`, inline: true })
-                .addFields({ name: "**Procent**  <:ilo_procent:1180622707700805783> ", value: `${USER_PERCENT * 100}% (${CURRENT_ROLE.name})`, inline: true })
-                .addFields({ name: "**Numer konta**  <:kontobankowe:1180628959583535114> ", value: `${USER_BANK_ACC?.account_number}`, inline: false })
-                .addFields({ name: "**Zwrot**  <:zwrot:1180621992660058272>", value: `${toReturn}` });
+                .addFields({ name: "Imię i nazwisko", value: `${USER_BANK_ACC.char_name}`, inline: true })
+                .addFields({ name: "Data", value: `${NOW_DATE} ${NOW_HOURS+1}:${NOW_MINUTES}`, inline: true })
+                .addFields({ name: "Robocizna", value: `$${passedNumber}`, inline: true })
+                .addFields({ name: "Premia", value: `$${USER_PAYOUT}`, inline: true })
+                .addFields({ name: "Numer konta", value: `${USER_BANK_ACC.account_number}`, inline: true })
+                .addFields({ name: "Zwrot", value: `${toReturn}`, inline: true })
+                .addFields({ name: "Status", value: "<:timescircle:1181629847911546920>", inline: false })
 
-            const BONUS_MESSAGE = BONUS_CHANNEL.send({ embeds: [BONUS_EMBED] });
+            const CLOSE_BUTTON = new ButtonBuilder()
+            .setCustomId("payout-bonus")
+            .setLabel("Wypłać")
+            .setStyle(ButtonStyle.Primary)
+
+            const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(CLOSE_BUTTON);
+
+            const BONUS_MESSAGE = BONUS_CHANNEL.send({ embeds: [BONUS_EMBED], components: [BUTTONS_ROW] });
 
             BONUS_MESSAGE.then((message) => {
-                return interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${message.id}\``, ephemeral: true });
+                interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${message.id}\``, ephemeral: true });
             }).catch(() => {
-                return interaction.reply({ content: `Wystąpił błąd podczas wysyłania wiadomości! Spróbuj jeszcze raz...`, ephemeral: true });
+                interaction.reply({ content: `Wystąpił błąd podczas wysyłania wiadomości! Spróbuj jeszcze raz...`, ephemeral: true });
             });
         }
     });

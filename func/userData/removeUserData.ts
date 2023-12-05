@@ -10,12 +10,10 @@ export function removeUserData(USER_ID: string, interaction: ChatInputCommandInt
     // Fetch the member object of the user from the guild
     const member = interaction.guild?.members.cache.get(interaction.user.id);
 
-    // Check if the member has the CEO or Manager role
-    if (!member?.roles.cache.has(process.env.CEO_ID!) && !member?.roles.cache.has(process.env.MANAGER_ID!)) {
-        // If not, reply with an error message and log the unauthorized attempt
-        interaction.reply({ content: "Nie posiadasz uprawnień do wykonania tej czynności.", ephemeral: true });
-        logMessage(2, interaction.user.username, "Unregister Worker", `Użytkownik próbował usunąć użytkownika o ID \`${USER_ID}\` z bazy pracowników, ale nie posiada uprawnień do tej czynności.`, interaction.user.id);
-        return;
+    if(!member?.roles.cache.find(r => r.id === process.env.MANAGER_ID!) && !member?.roles.cache.find(r => r.id === process.env.CEO_ID!)) 
+    {
+        interaction.reply({ content: `Nie posiadasz odpowiednich permisji do użycia tej komendy.`, ephemeral: true})
+        return
     }
 
     // Delete the user's data from the database

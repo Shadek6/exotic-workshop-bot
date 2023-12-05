@@ -10,9 +10,9 @@ export async function addUserData(USER_ID: string, CHAR_NAME: string, PHONE_NUMB
     const CONTACT_CHANNEL = client.channels.cache.get(process.env.CONTACT_CHANNEL!) as GuildTextBasedChannel;
     const INTERACTION_MEMBER = interaction.guild?.members.cache.get(interaction.user.id);
 
-    if (!INTERACTION_MEMBER?.roles.cache.has(process.env.WORKER_ID!)) {
+    if (!INTERACTION_MEMBER?.roles.cache.find(r => r.id === process.env.WORKER_ID!)) {
         interaction.reply({ content: `Nie posiadasz odpowiedniej roli, która pozwoliłaby na wywołanie tej komendy!`, ephemeral: true });
-        logMessage(2, interaction.user.username, "Register Error", `Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!`, interaction.user.id);
+        logMessage(2, interaction.user.username, "Register Error", `Użytkownik próbował dodać dane do bazy bez roli pracownik!`, interaction.user.id);
         return;
     }
 
