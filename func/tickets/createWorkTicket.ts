@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, ChannelType, PermissionsBitField, EmbedBuilder, TextBasedChannel, ButtonBuilder, ActionRowBuilder, ButtonStyle, Interaction } from "discord.js"
+import { ChatInputCommandInteraction, ChannelType, PermissionsBitField, EmbedBuilder, TextBasedChannel, ButtonBuilder, ActionRowBuilder, ButtonStyle, ButtonInteraction } from "discord.js"
 import { logMessage } from "../logMessage"
 
-export async function createWorkTicket(interaction: ChatInputCommandInteraction | Interaction) {
+export async function createWorkTicket(interaction: ButtonInteraction) {
     interaction.guild!.channels.create({
         name: `rekrutacja-${interaction.user.username}`,
         type: ChannelType.GuildText,
@@ -38,6 +38,8 @@ export async function createWorkTicket(interaction: ChatInputCommandInteraction 
         const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(CLOSE_BUTTON)
 
+        const INTERACTION_REPLY = interaction as unknown as ChatInputCommandInteraction
+        INTERACTION_REPLY.reply({ content: `Pomyślnie stworzono Ticket <#${ticketChannel.id}>`, ephemeral: true })
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
         logMessage(3, interaction.user.username, "Work Ticket Creation", "Użytkownik stworzył Ticket w panelu `Praca`")

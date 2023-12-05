@@ -20,8 +20,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
         return;
     }
 
-    const USER_GUILD = await client.guilds.fetch("1178742962138652712");
-    const fullUserInfo = await USER_GUILD.members.cache.get(interaction.user.id);
+    const fullUserInfo = await interaction.guild!.members.cache.get(interaction.user.id);
 
     ROLES_ID.forEach((role) => {
         const CURRENT_ROLE = fullUserInfo?.roles.cache.find((r) => r.id === role[0]);

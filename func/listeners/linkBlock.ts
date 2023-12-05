@@ -3,10 +3,10 @@ import { client } from "../../index";
 import { logMessage } from "../logMessage";
 export function linkBlock() {
     client.on("messageCreate", async (message: Message) => {
-        const MESSAGE_AUTHOR = await message.guild!.members.fetch(message.author.id);
+        const MESSAGE_AUTHOR = await message.guild!.members.cache.get(message.author.id);
 
         // Check if the author has any of the specified roles
-        const hasRole = ["1178743051582189609", "1180256831097016330", "1180256928186761327"].some((roleId) => MESSAGE_AUTHOR.roles.cache.has(roleId));
+        const hasRole = ["1178743051582189609", "1180256831097016330", "1180256928186761327"].some((roleId) => MESSAGE_AUTHOR?.roles.cache.has(roleId));
         if (hasRole) return;
 
         // Check if the message content includes a Discord server link

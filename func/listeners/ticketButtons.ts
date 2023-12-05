@@ -5,7 +5,8 @@ import { createWorkTicket } from "../tickets/createWorkTicket";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function initTicketClose() {
-    client.on("interactionCreate", async (interaction: Interaction) => {
+    client.on("interactionCreate", async (interaction: Interaction ) => {
+        if (interaction.isChatInputCommand()) return;
         if (!interaction.isButton()) return;
 
         // Open tickets depending on their ID
