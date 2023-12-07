@@ -32,7 +32,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
         if (CURRENT_ROLE != null) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const USER_PERCENT: any = role[1]!;
-            const USER_PAYOUT = toReturn === "false" ? Math.floor(passedNumber * USER_PERCENT) : passedNumber;
+            const USER_PAYOUT = toReturn === "false" ? parseFloat(((passedNumber * USER_PERCENT)/1000).toFixed(1))*1000 : passedNumber;
             toReturn === "true" ? (toReturn = "TAK") : (toReturn = "NIE");
 
             const BONUS_EMBED = new EmbedBuilder()

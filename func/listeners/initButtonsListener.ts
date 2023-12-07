@@ -57,7 +57,7 @@ export async function initButtonsListener() {
                 return
             }
 
-            // interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true})
+            interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true})
             MESSAGE_EMBED.fields[6].value = "<:checksquare:1181629839279652924>"
 
             const EMBED_AUTHOR = interaction.guild?.members.cache.find(u => u.nickname === MESSAGE_EMBED.author?.name)

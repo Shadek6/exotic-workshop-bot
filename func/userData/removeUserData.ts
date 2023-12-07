@@ -1,4 +1,3 @@
-
 import { ChatInputCommandInteraction } from "discord.js";
 import { MongoClient } from "mongodb";
 import { logMessage } from "../logMessage";
@@ -10,10 +9,9 @@ export function removeUserData(USER_ID: string, interaction: ChatInputCommandInt
     // Fetch the member object of the user from the guild
     const member = interaction.guild?.members.cache.get(interaction.user.id);
 
-    if(!member?.roles.cache.find(r => r.id === process.env.MANAGER_ID!) && !member?.roles.cache.find(r => r.id === process.env.CEO_ID!)) 
-    {
-        interaction.reply({ content: `Nie posiadasz odpowiednich permisji do użycia tej komendy.`, ephemeral: true})
-        return
+    if (!member?.roles.cache.find((r) => r.id === process.env.MANAGER_ID!) && !member?.roles.cache.find((r) => r.id === process.env.CEO_ID!)) {
+        interaction.reply({ content: `Nie posiadasz odpowiednich permisji do użycia tej komendy.`, ephemeral: true });
+        return;
     }
 
     // Delete the user's data from the database
