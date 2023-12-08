@@ -5,7 +5,7 @@ export async function createWorkTicket(interaction: ButtonInteraction) {
     interaction.guild!.channels.create({
         name: `rekrutacja-${interaction.user.username}`,
         type: ChannelType.GuildText,
-        parent: "1178754969067847741",
+        parent: process.env.TICKETS_PARENT,
         permissionOverwrites: [
             {
                 id: interaction.guild!.id,

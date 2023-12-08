@@ -6,7 +6,7 @@ export async function createPartnerTicket(interaction: Interaction) {
     interaction.guild!.channels.create({
         name: `partner-${interaction.user.username}`,
         type: ChannelType.GuildText,
-        parent: "1178754969067847741",
+        parent: process.env.TICKETS_PARENT,
         permissionOverwrites: [
             {
                 id: interaction.guild!.id,

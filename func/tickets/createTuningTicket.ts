@@ -5,7 +5,7 @@ export async function createTuningTicket(interaction: ChatInputCommandInteractio
     interaction.guild!.channels.create({
         name: `ticket-${interaction.user.username}`,
         type: ChannelType.GuildText,
-        parent: "1178754969067847741",
+        parent: process.env.TICKETS_PARENT,
         permissionOverwrites: [
             {
                 id: interaction.guild!.id,
