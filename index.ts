@@ -6,12 +6,14 @@ import { initButtonsListener } from "./func/listeners/initButtonsListener";
 import { sendPanel } from "./func/tickets/sendPanel";
 import { removeUserData } from "./func/userData/removeUserData";
 import { initMessagesEvents } from "./func/events/initMessagesEvents";
+import { linkBlock } from "./func/listeners/linkBlock";
 export const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent],
 });
 
 initButtonsListener();
 initMessagesEvents();
+linkBlock()
 
 client.on("interactionCreate", async (interaction: any) => {
     if (!interaction.isChatInputCommand) return;
