@@ -72,7 +72,7 @@ export async function initButtonsListener() {
             .setAuthor({ name: `${EMBED_AUTHOR?.nickname}` })
             .setTitle("Premia Wypłacona")
             .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
-            .setImage(`${process.env.EXOTIC_LOGO}`);
+            .setImage(`https://i.imgur.com/lBJ36PT.png`);
 
             USER_DM?.send({ embeds: [THANKS_EMBED] });
             
