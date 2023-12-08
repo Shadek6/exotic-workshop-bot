@@ -49,7 +49,7 @@ export async function initButtonsListener() {
             const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
 
             if (!INTERACTION_USER?.roles.cache.find((r) => r.name === "CEO")) {
-                interaction.reply({ content: `Nie posiadasz permisji pozwalających na zmianę statusu premii!`, ephemeral: true });
+                await interaction.reply({ content: `Nie posiadasz permisji pozwalających na zmianę statusu premii!`, ephemeral: true });
                 return;
             }
 
@@ -60,23 +60,30 @@ export async function initButtonsListener() {
                 return;
             }
 
-            interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true });
+            await interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true });
             MESSAGE_EMBED.fields[6].value = "<:checksquare:1181629839279652924>";
 
             const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
-            const USER_DM = await EMBED_AUTHOR?.createDM(true)
 
-            const THANKS_EMBED = new EmbedBuilder()
-            .setColor("Random")
-            .setThumbnail(`${EMBED_AUTHOR?.displayAvatarURL()}?size=4096`)
-            .setAuthor({ name: `${EMBED_AUTHOR?.nickname}` })
-            .setTitle("Premia Wypłacona")
-            .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
-            .setImage(`https://i.imgur.com/lBJ36PT.png`);
+            if(EMBED_AUTHOR !== undefined) 
+            {
+                const USER_DM = await EMBED_AUTHOR?.createDM(true)
 
-            USER_DM?.send({ embeds: [THANKS_EMBED] });
-            
-            interaction.message.edit({ embeds: [MESSAGE_EMBED] });
+                const THANKS_EMBED = new EmbedBuilder()
+                .setColor("Random")
+                .setAuthor({ name: `${EMBED_AUTHOR.nickname}` })
+                .setTitle("Premia Wypłacona")
+                .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
+                .setImage(`https://i.imgur.com/lBJ36PT.png`);
+    
+                USER_DM?.send({ embeds: [THANKS_EMBED] });
+                
+                await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
+                return
+            }
+
+            await interaction.reply({ content: `Nie udało się wysłać wiadomości do użytkownika!`, ephemeral: true });
+            await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
         }
     });
 }
