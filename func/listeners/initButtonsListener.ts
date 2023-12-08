@@ -1,11 +1,12 @@
-import { DMChannel, EmbedBuilder, GuildChannel, Interaction } from "discord.js";
+import { EmbedBuilder, GuildChannel, Interaction } from "discord.js";
 import { client } from "../..";
 import { createTuningTicket } from "../tickets/createTuningTicket";
 import { createWorkTicket } from "../tickets/createWorkTicket";
+import { createPartnerTicket } from "../tickets/createPartnerTicket";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function initButtonsListener() {
-    client.on("interactionCreate", async (interaction: Interaction ) => {
+    client.on("interactionCreate", async (interaction: Interaction) => {
         if (interaction.isChatInputCommand()) return;
         if (!interaction.isButton()) return;
 
@@ -27,6 +28,10 @@ export async function initButtonsListener() {
             }, 2000);
         }
 
+        if (interaction.customId === "partner") {
+            return createPartnerTicket(interaction);
+        }
+
         if (interaction.customId === "close-tuning-ticket") {
             interaction.reply({ content: "Closing ticket...", ephemeral: true }).then((message) => {
                 setTimeout(() => {
@@ -40,41 +45,38 @@ export async function initButtonsListener() {
             });
         }
 
-        if(interaction.customId === "payout-bonus") {
-            const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id)
+        if (interaction.customId === "payout-bonus") {
+            const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
 
-            if(!INTERACTION_USER?.roles.cache.find(r => r.name === "CEO")) 
-            {
-                interaction.reply({ content: `Nie posiadasz permisji pozwalających na zmianę statusu premii!`, ephemeral: true})
-                return
+            if (!INTERACTION_USER?.roles.cache.find((r) => r.name === "CEO")) {
+                interaction.reply({ content: `Nie posiadasz permisji pozwalających na zmianę statusu premii!`, ephemeral: true });
+                return;
             }
 
-            const MESSAGE_EMBED = interaction.message.embeds[0]
+            const MESSAGE_EMBED = interaction.message.embeds[0];
 
-            if(MESSAGE_EMBED.fields[6].value !== "<:timescircle:1181629847911546920>") 
-            {
-                await interaction.reply({ content: `Ta premia została już wypłacona.`, ephemeral: true})
-                return
+            if (MESSAGE_EMBED.fields[6].value !== "<:timescircle:1181629847911546920>") {
+                await interaction.reply({ content: `Ta premia została już wypłacona.`, ephemeral: true });
+                return;
             }
 
-            interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true})
-            MESSAGE_EMBED.fields[6].value = "<:checksquare:1181629839279652924>"
+            interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true });
+            MESSAGE_EMBED.fields[6].value = "<:checksquare:1181629839279652924>";
 
-            const EMBED_AUTHOR = interaction.guild?.members.cache.find(u => u.nickname === MESSAGE_EMBED.author?.name)
-            EMBED_AUTHOR?.createDM(true)
-            .then((userDM: DMChannel) => {
-                const THANKS_EMBED = new EmbedBuilder()
-                .setColor("Random")
-                .setThumbnail(`${EMBED_AUTHOR.displayAvatarURL()}?size=4096`)
-                .setAuthor({ name: `${EMBED_AUTHOR.nickname}` })
-                .setTitle("Premia Wypłacona")
-                .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
-                .setImage(`${process.env.EXOTIC_LOGO}`)
+            const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
+            const USER_DM = await EMBED_AUTHOR?.createDM(true)
 
-                userDM.send({ embeds: [THANKS_EMBED]})
-            })
+            const THANKS_EMBED = new EmbedBuilder()
+            .setColor("Random")
+            .setThumbnail(`${EMBED_AUTHOR?.displayAvatarURL()}?size=4096`)
+            .setAuthor({ name: `${EMBED_AUTHOR?.nickname}` })
+            .setTitle("Premia Wypłacona")
+            .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
+            .setImage(`${process.env.EXOTIC_LOGO}`);
+
+            USER_DM?.send({ embeds: [THANKS_EMBED] });
             
-            interaction.message.edit({ embeds: [MESSAGE_EMBED] })
+            interaction.message.edit({ embeds: [MESSAGE_EMBED] });
         }
     });
 }
