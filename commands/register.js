@@ -8,7 +8,7 @@ module.exports = {
             option
                 .setName("imie_nazwisko")
                 .setDescription(
-                    "Imię i nazwisko Twojej postaci. Format: [IMIE] [NAZWISKO]"
+                    "Imię i nazwisko Twojej postaci. Format: Kaylan Reeves"
                 )
                 .setRequired(true)
         )

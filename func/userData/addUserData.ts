@@ -41,13 +41,15 @@ export async function addUserData(USER_ID: string, CHAR_NAME: string, PHONE_NUMB
     const successDescription = `Użytkownik dodał dane postaci \`${CHAR_NAME}\` do bazy pracowników!`;
     const errorDescription = "Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!";
 
-    try {
-        await mongoClient.insertOne({ user_id: USER_ID, char_name: CHAR_NAME, phone_number: PHONE_NUMBER, account_number: ACCOUNT_NUMBER });
-        interaction.reply({ content: successMessage, ephemeral: true });
-        CONTACT_CHANNEL.send({ embeds: [WORKER_EMBED] });
-        logMessage(0, interaction.user.username, "Register Success", successDescription, interaction.user.id);
-    } catch (error) {
-        interaction.reply({ content: errorMessage, ephemeral: true });
-        logMessage(2, interaction.user.username, "Register Error", errorDescription, interaction.user.id);
-    }
+    const USER_MESSAGE = await CONTACT_CHANNEL.send({ embeds: [WORKER_EMBED] });
+
+    mongoClient.insertOne({ user_id: USER_ID, char_name: CHAR_NAME, phone_number: PHONE_NUMBER, account_number: ACCOUNT_NUMBER, message_id: USER_MESSAGE.id })
+    .then(async () => {
+        await interaction.reply({ content: successMessage, ephemeral: true });
+        await logMessage(0, interaction.user.username, "Register Success", successDescription, interaction.user.id);
+    })
+    .catch(async () => {
+        await interaction.reply({ content: errorMessage, ephemeral: true });
+        await logMessage(2, interaction.user.username, "Register Error", errorDescription, interaction.user.id);
+    });
 }

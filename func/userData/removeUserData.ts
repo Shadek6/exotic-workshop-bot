@@ -1,12 +1,12 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, GuildTextBasedChannel } from "discord.js";
 import { MongoClient } from "mongodb";
 import { logMessage } from "../logMessage";
 
 const uri = process.env.MONGO_URI!;
 const mongoClient = new MongoClient(uri).db("exotic-workshop").collection("workers");
 
-export function removeUserData(USER_ID: string, interaction: ChatInputCommandInteraction) {
-    // Fetch the member object of the user from the guild
+export async function removeUserData(USER_ID: string, interaction: ChatInputCommandInteraction) {
+    const DATABASE_USER = await mongoClient.findOne({ user_id: USER_ID });
     const member = interaction.guild?.members.cache.get(interaction.user.id);
 
     if (!member?.roles.cache.find((r) => r.id === process.env.MANAGER_ID!) && !member?.roles.cache.find((r) => r.id === process.env.CEO_ID!)) {
@@ -14,17 +14,22 @@ export function removeUserData(USER_ID: string, interaction: ChatInputCommandInt
         return;
     }
 
-    // Delete the user's data from the database
-    mongoClient
-        .deleteOne({ user_id: USER_ID })
-        .then(() => {
-            // If the deletion is successful, reply with a success message and log the deletion
-            interaction.reply({ content: `Poprawnie usunięto z bazy wpis pracownika o ID \`${USER_ID}\``, ephemeral: true });
-            logMessage(0, interaction.user.username, "Unregister Worker", `Usunięto z bazy danych wpis pracownika o ID \`${USER_ID}\``, interaction.user.id);
-        })
-        .catch(() => {
-            // If there is an error during the deletion, reply with an error message and log the error
-            interaction.reply({ content: `Wystąpił błąd podczas usuwania pracownika o ID \`${USER_ID}\``, ephemeral: true });
-            logMessage(2, interaction.user.username, "Unregister Worker", `Użytkownik natrafił na błąd podczas usuwania użytkownika o ID \`${USER_ID}\` z bazy pracowników.`, interaction.user.id);
-        });
+    if(!DATABASE_USER) {
+        interaction.reply({ content: `Nie posiadasz aktywnego wpisu w bazie danych!`, ephemeral: true });
+        return;
+    }
+
+    const MESSAGE_CHANNEL = interaction.guild?.channels.cache.get(process.env.CONTACT_CHANNEL!) as GuildTextBasedChannel;
+    const MESSAGE = await MESSAGE_CHANNEL.messages.fetch(DATABASE_USER.message_id);
+
+    mongoClient.deleteOne(DATABASE_USER)
+    .then(async () => {
+        await interaction.reply({ content: `Poprawnie usunięto wpis z bazy danych!`, ephemeral: true });
+        await MESSAGE.delete();
+        await logMessage(0, interaction.user.username, "Remove Success", `Użytkownik usunął z bazy wpis pracownika o ID \`${DATABASE_USER.user_id}\``);
+    })
+    .catch(async () => {
+        await interaction.reply({ content: `Wystąpił błąd podczas usuwania wpisu z bazy danych!`, ephemeral: true });
+        await logMessage(2, interaction.user.username, "Remove Error", `Użytkownik usunął z bazy wpis pracownika o ID \`${DATABASE_USER.user_id}\``);
+    });
 }

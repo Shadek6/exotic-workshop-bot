@@ -37,7 +37,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
 
             const BONUS_EMBED = new EmbedBuilder()
                 .setColor("Random")
-                .setTitle(`Premia - ${USER_PERCENT * 100}%`)
+                .setTitle(`Premia - ${(USER_PERCENT * 100).toFixed(0)}%`)
                 .setAuthor({ name: `${fullUserInfo?.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
                 .addFields({ name: "Imię i nazwisko", value: `${USER_BANK_ACC.char_name}`, inline: true })
                 .addFields({ name: "Data", value: `${NOW_DATE} ${NOW_HOURS + 1}:${NOW_MINUTES}`, inline: true })
