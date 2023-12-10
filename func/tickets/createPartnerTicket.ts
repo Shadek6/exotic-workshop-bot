@@ -1,5 +1,6 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, Interaction, PermissionsBitField, TextBasedChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ChannelType, EmbedBuilder, Interaction, PermissionsBitField, TextBasedChannel } from "discord.js";
 import { logMessage } from "../logMessage";
+import { createButton } from "../utility/createButton";
 export async function createPartnerTicket(interaction: Interaction) {
     interaction.guild!.channels.create({
         name: `partner-${interaction.user.username}`,
@@ -29,10 +30,7 @@ export async function createPartnerTicket(interaction: Interaction) {
             .setThumbnail("https://i.imgur.com/lBJ36PT.png?size=4096")
             .setTimestamp()
 
-        const CLOSE_BUTTON = new ButtonBuilder()
-        .setCustomId("close-tuning-ticket")
-        .setLabel("Zamknij Ticket")
-        .setStyle(ButtonStyle.Danger)
+        const CLOSE_BUTTON = createButton("DANGER", "close-tuning-ticket", "Zamknij Ticket", "🔒")
 
         const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(CLOSE_BUTTON)

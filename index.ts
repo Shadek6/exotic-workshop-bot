@@ -1,13 +1,17 @@
 import "dotenv/config";
+
 import { Client, GatewayIntentBits } from "discord.js";
-import { calculateBonus } from "./func/calculateBonus";
+
 import { addUserData } from "./func/userData/addUserData";
+import { calculateBonus } from "./func/calculateBonus";
+import { evaluateString } from "./func/events/evaluateString";
 import { initButtonsListener } from "./func/listeners/initButtonsListener";
-import { sendPanel } from "./func/tickets/sendPanel";
-import { removeUserData } from "./func/userData/removeUserData";
 import { initMessagesEvents } from "./func/events/initMessagesEvents";
 import { linkBlock } from "./func/listeners/linkBlock";
-import { evaluateString } from "./func/events/evaluateString";
+import { removeUserData } from "./func/userData/removeUserData";
+import { sendPanel } from "./func/tickets/sendPanel";
+import { sendVerify } from "./func/sendVerify";
+
 export const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent],
 });
@@ -28,6 +32,8 @@ client.on("interactionCreate", async (interaction: any) => {
     if (interaction.commandName === "unregister") await removeUserData(interaction.options.getString("user_id"), interaction);
 
     if(interaction.commandName === "evaluate-string") await evaluateString(interaction.options.getString("user_input"), interaction)
+
+    if(interaction.commandName === "send-verify") await sendVerify(interaction)
 });
 
 client.login(process.env.TOKEN);

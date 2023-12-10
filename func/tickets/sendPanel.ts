@@ -1,4 +1,5 @@
-import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, GuildMember, ChatInputCommandInteraction } from "discord.js";
+import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, GuildMember, ChatInputCommandInteraction } from "discord.js";
+import { createButton } from "../utility/createButton";
 
 export async function sendPanel(interaction: ChatInputCommandInteraction) 
 {
@@ -15,27 +16,16 @@ export async function sendPanel(interaction: ChatInputCommandInteraction)
     .setTitle("Panel ticketów")
     .setDescription("Wybierz którąś z poniższych opcji w celu założenia ticketa.")
 
-    const TUNING_BUTTON = new ButtonBuilder()
-        .setCustomId("tuning")
-        .setLabel("Tuning")
-        .setEmoji("🏁")
-        .setStyle(ButtonStyle.Primary)
+    const TUNING_BUTTON = createButton("PRIMARY", "tuning", "Tuning", "🏁")
 
-    const TEAM_BUTTON = new ButtonBuilder()
-        .setCustomId("work")
-        .setLabel("Praca")
-        .setEmoji("📝")
-        .setStyle(ButtonStyle.Primary)
+    const TEAM_BUTTON = createButton("PRIMARY", "work", "Praca", "📝")
 
-    const PARTNER_BUTTON = new ButtonBuilder()
-        .setCustomId("partner")
-        .setLabel("Partnerstwo")
-        .setEmoji("🤝")
-        .setStyle(ButtonStyle.Primary)
+    const PARTNER_BUTTON = createButton("PRIMARY", "partner", "Partnerstwo", "🤝")
 
     const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>()
     .addComponents(TUNING_BUTTON, TEAM_BUTTON, PARTNER_BUTTON)
 
-    interaction.channel!.send({ embeds: [PANEL_EMBED], components: [BUTTONS_ROW] })
+    await interaction.channel!.send({ embeds: [PANEL_EMBED], components: [BUTTONS_ROW] })
+    await interaction.reply({ content: "Wysłano wiadomość na kanał.", ephemeral: true })
     return
 }

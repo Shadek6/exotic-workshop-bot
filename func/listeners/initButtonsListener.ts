@@ -1,8 +1,9 @@
 import { EmbedBuilder, GuildChannel, Interaction } from "discord.js";
+
 import { client } from "../..";
+import { createPartnerTicket } from "../tickets/createPartnerTicket";
 import { createTuningTicket } from "../tickets/createTuningTicket";
 import { createWorkTicket } from "../tickets/createWorkTicket";
-import { createPartnerTicket } from "../tickets/createPartnerTicket";
 import { logMessage } from "../logMessage";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,7 +77,7 @@ export async function initButtonsListener() {
                     .setAuthor({ name: `${EMBED_AUTHOR.nickname}` })
                     .setTitle("Premia Wypłacona")
                     .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
-                    .setImage(`https://i.imgur.com/lBJ36PT.png`);
+                    .setImage(process.env.EXOTIC_LOGO as string);
 
                 USER_DM?.send({ embeds: [THANKS_EMBED] });
 
@@ -86,6 +87,22 @@ export async function initButtonsListener() {
 
             await interaction.reply({ content: `Nie udało się wysłać wiadomości do użytkownika!`, ephemeral: true });
             await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
+        }
+    
+        if(interaction.customId === "verify") {
+            const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
+
+            if(INTERACTION_USER?.roles.cache.has(process.env.VERIFIED_ID as string)) {
+                await interaction.reply({ content: `Posiadasz już rolę \`Klient\`!`, ephemeral: true });
+                return;
+            }
+
+            try {
+                await INTERACTION_USER?.roles.add(process.env.VERIFIED_ID as string);
+                await interaction.reply({ content: `Poprawnie dodano rolę \`Klient\`!`, ephemeral: true });
+            } catch {
+                await interaction.reply({ content: `Nie udało się nadać roli \`Klient\`!`, ephemeral: true });
+            }
         }
     });
 }

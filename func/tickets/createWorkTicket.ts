@@ -1,5 +1,6 @@
-import { ChatInputCommandInteraction, ChannelType, PermissionsBitField, EmbedBuilder, TextBasedChannel, ButtonBuilder, ActionRowBuilder, ButtonStyle, ButtonInteraction } from "discord.js"
+import { ChatInputCommandInteraction, ChannelType, PermissionsBitField, EmbedBuilder, TextBasedChannel, ButtonBuilder, ActionRowBuilder, ButtonInteraction } from "discord.js"
 import { logMessage } from "../logMessage"
+import { createButton } from "../utility/createButton"
 
 export async function createWorkTicket(interaction: ButtonInteraction) {
     interaction.guild!.channels.create({
@@ -30,23 +31,20 @@ export async function createWorkTicket(interaction: ButtonInteraction) {
         .setThumbnail("https://i.imgur.com/lBJ36PT.png?size=4096")
         .setTimestamp()
 
-        const CLOSE_BUTTON = new ButtonBuilder()
-        .setCustomId("close-work-ticket")
-        .setLabel("Zamknij Ticket")
-        .setStyle(ButtonStyle.Danger)
+        const CLOSE_BUTTON = createButton("DANGER", "close-work-ticket", "Zamknij Ticket", "🔒")
 
         const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(CLOSE_BUTTON)
 
         const INTERACTION_REPLY = interaction as unknown as ChatInputCommandInteraction
-        INTERACTION_REPLY.reply({ content: `Pomyślnie stworzono Ticket <#${ticketChannel.id}>`, ephemeral: true })
+        await INTERACTION_REPLY.reply({ content: `Pomyślnie stworzono Ticket <#${ticketChannel.id}>`, ephemeral: true })
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
         await logMessage(3, interaction.user.username, "Work Ticket Creation", "Użytkownik stworzył Ticket w panelu `Praca`")
 
         ticketChannel.send("<@&1178743386610606153>").then((newMessage => {
-            setTimeout(() => {
-                newMessage.delete()
+            setTimeout(async () => {
+                await newMessage.delete()
             }, 1000)
         }))
     })
