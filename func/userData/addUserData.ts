@@ -12,7 +12,7 @@ export async function addUserData(USER_ID: string, CHAR_NAME: string, PHONE_NUMB
 
     if (!INTERACTION_MEMBER?.roles.cache.find(r => r.id === process.env.WORKER_ID!)) {
         interaction.reply({ content: `Nie posiadasz odpowiedniej roli, która pozwoliłaby na wywołanie tej komendy!`, ephemeral: true });
-        logMessage(2, interaction.user.username, "Register Error", `Użytkownik próbował dodać dane do bazy bez roli pracownik!`, interaction.user.id);
+        await logMessage(2, interaction.user.username, "Register Error", `Użytkownik próbował dodać dane do bazy bez roli pracownik!`, interaction.user.id);
         return;
     }
 
@@ -21,13 +21,13 @@ export async function addUserData(USER_ID: string, CHAR_NAME: string, PHONE_NUMB
             content: `Posiadasz aktywny wpis w bazie danych użytkowników! Jeżeli uważasz, że to błąd, skontaktuj się z właścicielami w celu usunięcia!`,
             ephemeral: true,
         });
-        logMessage(2, interaction.user.username, "Register Error", `Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!`, interaction.user.id);
+        await logMessage(2, interaction.user.username, "Register Error", `Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!`, interaction.user.id);
         return;
     }
 
     if (!CHAR_NAME.includes(" ") || PHONE_NUMBER.length !== 6 || ACCOUNT_NUMBER.length !== 10) {
         interaction.reply({ content: `Podano niepoprawne dane! Sprawdź poprawność zapisu swoich parametrów!`, ephemeral: true });
-        logMessage(2, interaction.user.username, "Register Error", `Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!`, interaction.user.id);
+        await logMessage(2, interaction.user.username, "Register Error", `Użytkownik natrafił na błąd przy dodawaniu informacji do bazy pracowników!`, interaction.user.id);
         return;
     }
 

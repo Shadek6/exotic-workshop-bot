@@ -33,6 +33,6 @@ export async function logMessage(MessageType: number, UserName: string, UserActi
     LOG_EMBED.addFields({ name: "**Action**", value: UserAction, inline: true });
     LOG_EMBED.addFields({ name: "**Description**", value: MessageContent, inline: false });
 
-    UserID ? LOG_CHANNEL.send({ content: `<@!${UserID}>`, embeds: [LOG_EMBED] }) : LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
+    UserID ? await LOG_CHANNEL.send({ content: `<@!${UserID}>`, embeds: [LOG_EMBED] }) : await LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
     return;
 }

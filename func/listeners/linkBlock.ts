@@ -14,7 +14,7 @@ export function linkBlock() {
             const channel = message.channel as TextBasedChannel;
 
             // Log the deleted message
-            logMessage(3, message.author.username, "Message Delete", `Wiadomość o treści \`${message.content}\` została usunięta z kanału <#${channel.id}>`, message.author.id);
+            await logMessage(3, message.author.username, "Message Delete", `Wiadomość o treści \`${message.content}\` została usunięta z kanału <#${channel.id}>`, message.author.id);
 
             // Delete the message and send a warning message to the channel
             await message.delete();

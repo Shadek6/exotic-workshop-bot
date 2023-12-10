@@ -19,7 +19,7 @@ export async function createPartnerTicket(interaction: Interaction) {
                 allow: [PermissionsBitField.Flags.ViewChannel],
             }
         ]
-    }).then((ticketChannel: TextBasedChannel) => {
+    }).then(async (ticketChannel: TextBasedChannel) => {
         ticketChannel.send({ content: `<@!${interaction.user.id}>` })
         const WELCOME_EMBED = new EmbedBuilder()
             .setAuthor({ name: "Partnerzy" })
@@ -39,7 +39,7 @@ export async function createPartnerTicket(interaction: Interaction) {
 
         ticketChannel.send({ embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
-        logMessage(3, interaction.user.username, "Partner Ticket Creation", "Użytkownik stworzył Ticket w panelu `Partnerzy`")
+        await logMessage(3, interaction.user.username, "Partner Ticket Creation", "Użytkownik stworzył Ticket w panelu `Partnerzy`")
 
         ticketChannel.send("@everyone").then((newMessage => {
             setTimeout(() => {

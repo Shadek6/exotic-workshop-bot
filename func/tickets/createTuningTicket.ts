@@ -36,7 +36,7 @@ export async function createTuningTicket(interaction: ChatInputCommandInteractio
                 allow: [PermissionsBitField.Flags.ViewChannel]
             },
         ]
-    }).then((ticketChannel: TextBasedChannel) => {
+    }).then(async (ticketChannel: TextBasedChannel) => {
         const WELCOME_EMBED = new EmbedBuilder()
         .setAuthor( { name: "Zlecenie Tuningu"} )
         .setTitle("**Wzór formularza tuningowego**")
@@ -55,7 +55,7 @@ export async function createTuningTicket(interaction: ChatInputCommandInteractio
 
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
-        logMessage(3, interaction.user.username, "Tuning Ticket Creation", "Użytkownik stworzył Ticket w panelu `Tuning`")
+        await logMessage(3, interaction.user.username, "Tuning Ticket Creation", "Użytkownik stworzył Ticket w panelu `Tuning`")
 
         ticketChannel.send("@everyone").then((newMessage => {
             setTimeout(() => {

@@ -21,7 +21,7 @@ export async function createWorkTicket(interaction: ButtonInteraction) {
             }
 
         ]
-    }).then((ticketChannel: TextBasedChannel) => {
+    }).then(async (ticketChannel: TextBasedChannel) => {
         const WELCOME_EMBED = new EmbedBuilder()
         .setAuthor( { name: interaction.user.username } )
         .setTitle("**Ticket rekrutacyjny**")
@@ -42,7 +42,7 @@ export async function createWorkTicket(interaction: ButtonInteraction) {
         INTERACTION_REPLY.reply({ content: `Pomyślnie stworzono Ticket <#${ticketChannel.id}>`, ephemeral: true })
         ticketChannel.send({ content: `<@!${interaction.user.id}>`, embeds: [WELCOME_EMBED], components: [BUTTONS_ROW] })
 
-        logMessage(3, interaction.user.username, "Work Ticket Creation", "Użytkownik stworzył Ticket w panelu `Praca`")
+        await logMessage(3, interaction.user.username, "Work Ticket Creation", "Użytkownik stworzył Ticket w panelu `Praca`")
 
         ticketChannel.send("<@&1178743386610606153>").then((newMessage => {
             setTimeout(() => {

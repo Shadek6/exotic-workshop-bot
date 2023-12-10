@@ -3,6 +3,7 @@ import { client } from "../..";
 import { createTuningTicket } from "../tickets/createTuningTicket";
 import { createWorkTicket } from "../tickets/createWorkTicket";
 import { createPartnerTicket } from "../tickets/createPartnerTicket";
+import { logMessage } from "../logMessage";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function initButtonsListener() {
@@ -22,7 +23,8 @@ export async function initButtonsListener() {
         // Close tickets
         if (interaction.customId === "close-work-ticket") {
             interaction.reply({ content: `Closing ticket in 1s...`, ephemeral: true });
-            setTimeout(() => {
+            setTimeout(async () => {
+                await logMessage(0, interaction.user.username, "Ticket Closed", `Użytkownik zamknął ticket!`, interaction.user.id);
                 interaction.channel!.delete();
                 return;
             }, 2000);
@@ -34,12 +36,13 @@ export async function initButtonsListener() {
 
         if (interaction.customId === "close-tuning-ticket") {
             interaction.reply({ content: "Closing ticket...", ephemeral: true }).then((message) => {
-                setTimeout(() => {
+                setTimeout(async () => {
                     message.delete();
                     const TICKET_CHANNEL = interaction.guild!.channels.cache.find((c) => c.id === interaction.channel!.id) as GuildChannel;
 
                     TICKET_CHANNEL.setParent("1180633766713106443");
                     TICKET_CHANNEL.lockPermissions();
+                    await logMessage(0, interaction.user.username, "Ticket Closed", `Użytkownik zamknął ticket!`, interaction.user.id);
                     return;
                 }, 1000);
             });
@@ -65,21 +68,20 @@ export async function initButtonsListener() {
 
             const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
 
-            if(EMBED_AUTHOR !== undefined) 
-            {
-                const USER_DM = await EMBED_AUTHOR?.createDM(true)
+            if (EMBED_AUTHOR !== undefined) {
+                const USER_DM = await EMBED_AUTHOR?.createDM(true);
 
                 const THANKS_EMBED = new EmbedBuilder()
-                .setColor("Random")
-                .setAuthor({ name: `${EMBED_AUTHOR.nickname}` })
-                .setTitle("Premia Wypłacona")
-                .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
-                .setImage(`https://i.imgur.com/lBJ36PT.png`);
-    
+                    .setColor("Random")
+                    .setAuthor({ name: `${EMBED_AUTHOR.nickname}` })
+                    .setTitle("Premia Wypłacona")
+                    .setDescription(`Twoja premia w wysokości \`${MESSAGE_EMBED.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
+                    .setImage(`https://i.imgur.com/lBJ36PT.png`);
+
                 USER_DM?.send({ embeds: [THANKS_EMBED] });
-                
+
                 await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
-                return
+                return;
             }
 
             await interaction.reply({ content: `Nie udało się wysłać wiadomości do użytkownika!`, ephemeral: true });
