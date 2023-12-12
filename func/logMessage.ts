@@ -1,4 +1,5 @@
-import { GuildTextBasedChannel, EmbedBuilder } from "discord.js";
+import { EmbedBuilder, GuildTextBasedChannel } from "discord.js";
+
 import { client } from "../index";
 
 export async function logMessage(MessageType: number, UserName: string, UserAction: string, MessageContent: string, UserID?: string) {
@@ -29,10 +30,13 @@ export async function logMessage(MessageType: number, UserName: string, UserActi
         }
     }
 
-    LOG_EMBED.addFields({ name: "**User**", value: UserName, inline: true });
-    LOG_EMBED.addFields({ name: "**Action**", value: UserAction, inline: true });
-    LOG_EMBED.addFields({ name: "**Description**", value: MessageContent, inline: false });
+    try {
+        LOG_EMBED.addFields({ name: "**User**", value: UserName, inline: true });
+        LOG_EMBED.addFields({ name: "**Action**", value: UserAction, inline: true });
+        LOG_EMBED.addFields({ name: "**Description**", value: MessageContent, inline: false });
 
-    UserID ? await LOG_CHANNEL.send({ content: `<@!${UserID}>`, embeds: [LOG_EMBED] }) : await LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
-    return;
+        UserID ? await LOG_CHANNEL.send({ content: `<@!${UserID}>`, embeds: [LOG_EMBED] }) : await LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
+    } catch (error) {
+        console.log(error);
+    }
 }

@@ -1,6 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ChannelType, EmbedBuilder, Interaction, PermissionsBitField, TextBasedChannel } from "discord.js";
-import { logMessage } from "../logMessage";
+
 import { createButton } from "../utility/createButton";
+import { logMessage } from "../logMessage";
+
 export async function createPartnerTicket(interaction: Interaction) {
     interaction.guild!.channels.create({
         name: `partner-${interaction.user.username}`,

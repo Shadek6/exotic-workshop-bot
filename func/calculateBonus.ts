@@ -1,6 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
+
 import { client } from "../index";
 import { getUserData } from "./userData/getUserData";
+
 const ROLES_ID = [
     [process.env.ROOKIE_ID, 0.5],
     [process.env.EMPLOYEE_ID, 0.55],
@@ -10,6 +12,8 @@ const ROLES_ID = [
 ];
 
 export async function calculateBonus(interaction: ChatInputCommandInteraction, passedNumber: number, toReturn: string) {
+    if(!interaction.isChatInputCommand() || interaction === undefined) return;
+
     const USER_BANK_ACC = await getUserData(interaction.user.id);
 
     if (!USER_BANK_ACC) {

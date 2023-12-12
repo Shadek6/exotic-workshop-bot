@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+
 const uri = process.env.MONGO_URI!;
 const mongoClient = new MongoClient(uri).db("exotic-workshop").collection("workers");
 
