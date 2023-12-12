@@ -104,5 +104,41 @@ export async function initButtonsListener() {
                 await interaction.reply({ content: `Nie udało się nadać roli \`Klient\`!`, ephemeral: true });
             }
         }
+
+        if(interaction.customId === "employment-payout") 
+        {
+            const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
+            if(!INTERACTION_USER?.roles.cache.has(process.env.CEO_ID as string)) {
+                await interaction.reply({ content: `Nie masz dostępu do tej akcji!`, ephemeral: true });
+                return;
+            }
+
+            const MESSAGE_EMBED = interaction.message.embeds[0];
+            if(MESSAGE_EMBED.fields[0].value !== "<:timescircle:1181629847911546920>") {
+                await interaction.reply({ content: `Ta wypłata została już wypłacona!`, ephemeral: true });
+                return;
+            }
+            
+            MESSAGE_EMBED.fields[0].value = "<:checksquare:1181629839279652924>";
+            await interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true });
+            
+            const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
+            
+            if(EMBED_AUTHOR !== undefined) {
+                const USER_DM = await EMBED_AUTHOR?.createDM(true);
+
+                const THANKS_EMBED = new EmbedBuilder()
+                    .setColor("Random")
+                    .setAuthor({ name: `${EMBED_AUTHOR.nickname}` })
+                    .setTitle("Wypłata Wypłacona")
+                    .setDescription(`Twoja wypłata w wysokości \`$2500\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
+                    .setImage(process.env.EXOTIC_LOGO as string);
+
+                USER_DM?.send({ embeds: [THANKS_EMBED] });
+
+                await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
+                return;
+            }
+        }
     });
 }
