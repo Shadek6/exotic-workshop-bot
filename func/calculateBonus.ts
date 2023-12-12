@@ -1,6 +1,7 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, DiscordAPIError, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
 
 import { client } from "../index";
+import { createButton } from "./utility/createButton";
 import { getUserData } from "./userData/getUserData";
 
 const ROLES_ID = [
@@ -12,7 +13,7 @@ const ROLES_ID = [
 ];
 
 export async function calculateBonus(interaction: ChatInputCommandInteraction, passedNumber: number, toReturn: string) {
-    if(!interaction.isChatInputCommand() || interaction === undefined) return;
+    if (!interaction.isChatInputCommand() || interaction === undefined) return;
 
     const USER_BANK_ACC = await getUserData(interaction.user.id);
 
@@ -34,30 +35,36 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
         const NOW_MINUTES = new Date().getUTCMinutes();
 
         if (CURRENT_ROLE != null) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const USER_PERCENT: any = role[1]!;
+            const USER_PERCENT = role[1] as number;
             const USER_PAYOUT = toReturn === "false" ? parseFloat(((passedNumber * USER_PERCENT) / 1000).toFixed(1)) * 1000 : passedNumber;
             toReturn === "true" ? (toReturn = "TAK") : (toReturn = "NIE");
 
-            const BONUS_EMBED = new EmbedBuilder()
-                .setColor("Random")
-                .setTitle(`Premia - ${(USER_PERCENT * 100).toFixed(0)}%`)
-                .setAuthor({ name: `${fullUserInfo?.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
-                .addFields({ name: "Imię i nazwisko", value: `${USER_BANK_ACC.char_name}`, inline: true })
-                .addFields({ name: "Data", value: `${NOW_DATE} ${NOW_HOURS + 1}:${NOW_MINUTES}`, inline: true })
-                .addFields({ name: "Robocizna", value: `$${passedNumber}`, inline: true })
-                .addFields({ name: "Premia", value: `$${USER_PAYOUT}`, inline: true })
-                .addFields({ name: "Numer konta", value: `${USER_BANK_ACC.account_number}`, inline: true })
-                .addFields({ name: "Zwrot", value: `${toReturn}`, inline: true })
-                .addFields({ name: "Status", value: "<:timescircle:1181629847911546920>", inline: false });
+            try {
+                const BONUS_EMBED = new EmbedBuilder()
+                    .setColor("Random")
+                    .setTitle(`Premia - ${(USER_PERCENT * 100).toFixed(0)}%`)
+                    .setAuthor({ name: `${fullUserInfo?.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
+                    .addFields({ name: "Imię i nazwisko", value: `${USER_BANK_ACC.char_name}`, inline: true })
+                    .addFields({ name: "Data", value: `${NOW_DATE} ${NOW_HOURS + 1}:${NOW_MINUTES}`, inline: true })
+                    .addFields({ name: "Robocizna", value: `$${passedNumber}`, inline: true })
+                    .addFields({ name: "Premia", value: `$${USER_PAYOUT}`, inline: true })
+                    .addFields({ name: "Numer konta", value: `${USER_BANK_ACC.account_number}`, inline: true })
+                    .addFields({ name: "Zwrot", value: `${toReturn}`, inline: true })
+                    .addFields({ name: "Status", value: "<:timescircle:1181629847911546920>", inline: false });
 
-            const CLOSE_BUTTON = new ButtonBuilder().setCustomId("payout-bonus").setLabel("Wypłać").setStyle(ButtonStyle.Primary);
+                const CLOSE_BUTTON = createButton("PRIMARY", "close", "Wypłać", "<:ilo_procent:1180622707700805783>");
+                const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>().addComponents(CLOSE_BUTTON);
+                const BONUS_MESSAGE = await BONUS_CHANNEL.send({ embeds: [BONUS_EMBED], components: [BUTTONS_ROW] });
 
-            const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>().addComponents(CLOSE_BUTTON);
+                await interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${BONUS_MESSAGE.id}\``, ephemeral: true });
+            } catch (error) {
+                const DiscordError = error as DiscordAPIError;
+                console.log(DiscordError);
 
-            const BONUS_MESSAGE = await BONUS_CHANNEL.send({ embeds: [BONUS_EMBED], components: [BUTTONS_ROW] });
-
-            await interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${BONUS_MESSAGE.id}\``, ephemeral: true });
+                if (DiscordError.code !== 10062) {
+                    interaction.reply({ content: `Wystąpił błąd podczas wysyłania wiadomości na kanał Premie!`, ephemeral: true });
+                }
+            }
         }
     });
 
