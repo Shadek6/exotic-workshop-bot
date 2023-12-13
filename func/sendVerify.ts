@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 
 import { createButton } from "./utility/createButton";
+import { resolveError } from "./utility/resolveError";
 
 export async function sendVerify(interaction: ChatInputCommandInteraction) {
     const InteractionUser = interaction.guild?.members.cache.get(interaction.user.id)
@@ -18,7 +19,11 @@ export async function sendVerify(interaction: ChatInputCommandInteraction) {
     const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>()
     .addComponents(VERIFY_BUTTON)
 
-    await interaction.channel?.send({ embeds: [VERIFY_EMBED], components: [BUTTONS_ROW] })
-    await interaction.reply({ content: "Wysłano wiadomość na kanał.", ephemeral: true })
-    return
+    try {
+        await interaction.channel?.send({ embeds: [VERIFY_EMBED], components: [BUTTONS_ROW] })
+        await interaction.reply({ content: "Wysłano wiadomość na kanał.", ephemeral: true })
+        return
+    } catch(error) {
+        resolveError("sendVerify.ts", error)
+    }
 }

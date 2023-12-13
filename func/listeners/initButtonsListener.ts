@@ -137,7 +137,6 @@ export async function initButtonsListener() {
                 USER_DM?.send({ embeds: [THANKS_EMBED] });
 
                 await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
-                return;
             }
         }
     });

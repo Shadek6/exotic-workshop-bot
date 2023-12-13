@@ -1,8 +1,9 @@
-import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, DiscordAPIError, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuilder, GuildTextBasedChannel } from "discord.js";
 
 import { client } from "../index";
 import { createButton } from "./utility/createButton";
 import { getUserData } from "./userData/getUserData";
+import { resolveError } from "./utility/resolveError";
 
 const ROLES_ID = [
     [process.env.ROOKIE_ID, 0.5],
@@ -52,18 +53,13 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
                     .addFields({ name: "Zwrot", value: `${toReturn}`, inline: true })
                     .addFields({ name: "Status", value: "<:timescircle:1181629847911546920>", inline: false });
 
-                const CLOSE_BUTTON = createButton("PRIMARY", "close", "Wypłać", "<:ilo_procent:1180622707700805783>");
+                const CLOSE_BUTTON = createButton("PRIMARY", "payout-bonus", "Wypłać", "<:ilo_procent:1180622707700805783>");
                 const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>().addComponents(CLOSE_BUTTON);
                 const BONUS_MESSAGE = await BONUS_CHANNEL.send({ embeds: [BONUS_EMBED], components: [BUTTONS_ROW] });
 
                 await interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${BONUS_MESSAGE.id}\``, ephemeral: true });
             } catch (error) {
-                const DiscordError = error as DiscordAPIError;
-                console.log(DiscordError);
-
-                if (DiscordError.code !== 10062) {
-                    interaction.reply({ content: `Wystąpił błąd podczas wysyłania wiadomości na kanał Premie!`, ephemeral: true });
-                }
+                return resolveError("calculateBonus.ts", error);
             }
         }
     });

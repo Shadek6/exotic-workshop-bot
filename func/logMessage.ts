@@ -1,6 +1,7 @@
 import { EmbedBuilder, GuildTextBasedChannel } from "discord.js";
 
 import { client } from "../index";
+import { resolveError } from "./utility/resolveError";
 
 export async function logMessage(MessageType: number, UserName: string, UserAction: string, MessageContent: string, UserID?: string) {
     const LOG_CHANNEL = client.channels.cache.get(process.env.LOG_CHANNEL!) as GuildTextBasedChannel;
@@ -37,6 +38,6 @@ export async function logMessage(MessageType: number, UserName: string, UserActi
 
         UserID ? await LOG_CHANNEL.send({ content: `<@!${UserID}>`, embeds: [LOG_EMBED] }) : await LOG_CHANNEL.send({ embeds: [LOG_EMBED] });
     } catch (error) {
-        console.log(error);
+        resolveError("logMessage.ts", error)
     }
 }

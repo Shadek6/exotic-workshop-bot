@@ -2,6 +2,7 @@ import { Events, Message, PartialMessage } from "discord.js";
 
 import { client } from "../..";
 import { logMessage } from "../logMessage";
+import { resolveError } from "../utility/resolveError";
 
 export function initMessagesEvents() {
     client.on(Events.MessageDelete, async (message: Message | PartialMessage ) => {
@@ -11,7 +12,7 @@ export function initMessagesEvents() {
         try {
             await logMessage(3, message.author!.username, "Message Delete", `**Message by _\`${message.author?.username}\`_ got deleted in <#${message.channel.id}>**\n\`${message.content}\``);
         } catch (error) {
-            console.log(error);
+            return resolveError("initMessagesEvents.ts", error)
         }
     })
 
@@ -22,7 +23,7 @@ export function initMessagesEvents() {
         try {
             await logMessage(3, newMessage.author!.username, "Message Update", `**Message by _\`${newMessage.author?.username}\`_ got updated in <#${newMessage.channel.id}>**\n\n**Old message:**\n\`${oldMessage.content}\`\n\n**New message:**\n\`${newMessage.content}\``);
         } catch (error) {
-            console.log(error);
+            return resolveError("initMessagesEvents.ts", error)
         }
     })
 }

@@ -8,7 +8,6 @@ import { calculateBonus } from "./func/calculateBonus";
 import { evaluateString } from "./func/events/evaluateString";
 import { initButtonsListener } from "./func/listeners/initButtonsListener";
 import { initMessagesEvents } from "./func/events/initMessagesEvents";
-import { linkBlock } from "./func/listeners/linkBlock";
 import { removeUserData } from "./func/userData/removeUserData";
 import { sendPanel } from "./func/tickets/sendPanel";
 import { sendVerify } from "./func/sendVerify";
@@ -19,7 +18,6 @@ export const client = new Client({
 
 initButtonsListener();
 initMessagesEvents();
-linkBlock();
 
 client.on("interactionCreate", async (interaction: any) => {
     if (!interaction.isChatInputCommand) return;
