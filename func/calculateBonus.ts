@@ -37,7 +37,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
 
         if (CURRENT_ROLE != null) {
             const USER_PERCENT = role[1] as number;
-            const USER_PAYOUT = toReturn === "false" ? parseFloat(((passedNumber * USER_PERCENT) / 1000).toFixed(1)) * 1000 : passedNumber;
+            const USER_PAYOUT = toReturn === "false" ? (passedNumber * USER_PERCENT).toFixed(0) : passedNumber;
             toReturn === "true" ? (toReturn = "TAK") : (toReturn = "NIE");
 
             try {
