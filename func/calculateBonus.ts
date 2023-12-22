@@ -6,11 +6,11 @@ import { getUserData } from "./userData/getUserData";
 import { resolveError } from "./utility/resolveError";
 
 const ROLES_ID = [
-    [process.env.ROOKIE_ID, 0.5],
-    [process.env.EMPLOYEE_ID, 0.55],
-    [process.env.EXPERIENCED_ID, 0.6],
-    [process.env.MANAGER_ID, 0.65],
-    [process.env.CEO_ID, 0.7],
+    [process.env.ROOKIE_ID, 0.4],
+    [process.env.EMPLOYEE_ID, 0.5],
+    [process.env.EXPERIENCED_ID, 0.55],
+    [process.env.MANAGER_ID, 0.6],
+    [process.env.CEO_ID, 0.65],
 ];
 
 export async function calculateBonus(interaction: ChatInputCommandInteraction, passedNumber: number, toReturn: string) {
