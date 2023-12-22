@@ -3,9 +3,11 @@ import { ActionRowBuilder, ButtonBuilder, ChatInputCommandInteraction, EmbedBuil
 import { client } from "..";
 import { createButton } from "./utility/createButton";
 import { resolveError } from "./utility/resolveError";
+import { getUserData } from "./userData/getUserData";
 
 export async function addWorker(workerMention: UserMention, nicknameIC: string, interaction: ChatInputCommandInteraction) {
     const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
+    const USER_BANK_ACC = await getUserData(interaction.user.id)
 
     if (!INTERACTION_USER?.roles.cache.has(process.env.CEO_ID!) && !INTERACTION_USER?.roles.cache.has(process.env.MANAGER_ID!)) {
         interaction.reply({ content: `Nie posiadasz uprawnień do tej komendy!`, ephemeral: true });
@@ -41,7 +43,7 @@ export async function addWorker(workerMention: UserMention, nicknameIC: string, 
             .setTitle("Zatrudnienie")
             .setAuthor({ name: `${INTERACTION_USER?.nickname}`, iconURL: `${INTERACTION_USER?.user.avatarURL()}` })
             .setDescription(`Zatrudniono użytkownika \`${nicknameIC}\` (${workerMention})`)
-            .addFields({ name: `Status`, value: "<:timescircle:1181629847911546920>" })
+            .addFields({ name: `Status`, value: "<:timescircle:1181629847911546920>" }, { name: `Numer konta`, value: `${USER_BANK_ACC?.account_number}` })
             .setTimestamp();
 
         await WORKER_USER?.roles.add(ROOKIE_ROLE);
