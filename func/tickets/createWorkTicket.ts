@@ -26,7 +26,7 @@ export async function createWorkTicket(interaction: ButtonInteraction) {
         const WELCOME_EMBED = new EmbedBuilder()
         .setAuthor( { name: interaction.user.username } )
         .setTitle("**Ticket rekrutacyjny**")
-        .setDescription("Witaj w tickecie, który rozpoczyna Twój proces rekrutacji! Na początek przedstaw swoją postać i wizję na grę w gronie naszych pracowników! Zachęcamy do przedstawienia głównie background postaci oraz głównych motywów, które nią kierują - zarazem można umieścić doświadczenie w przeszłości i po krótce przedstawić swoją aktywność! Powodzenia!")
+        .setDescription("Witaj w tickecie, który rozpoczyna Twój proces rekrutacji! Umów się z którymś z naszych rekruterów w grze, aby dołączyć do naszego zespołu.")
         .setColor("Random")
         .setThumbnail("https://i.imgur.com/lBJ36PT.png?size=4096")
         .setTimestamp()
