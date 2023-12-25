@@ -36,6 +36,13 @@ export async function initButtonsListener() {
         }
 
         if (interaction.customId === "close-tuning-ticket") {
+            const interaction_channel = interaction.guild?.channels.cache.find((c) => c.id === interaction.channel!.id) as GuildChannel;
+            
+            if(interaction_channel.parentId === "1180633766713106443") {
+                await interaction.reply({ content: "Closing ticket...", ephemeral: true })
+                setTimeout(() => interaction_channel.delete(), 1000)
+            }
+            else {
             interaction.reply({ content: "Closing ticket...", ephemeral: true }).then((message) => {
                 setTimeout(async () => {
                     message.delete();
@@ -47,6 +54,7 @@ export async function initButtonsListener() {
                     return;
                 }, 1000);
             });
+            }
         }
 
         if (interaction.customId === "payout-bonus") {

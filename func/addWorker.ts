@@ -48,6 +48,7 @@ export async function addWorker(workerMention: UserMention, nicknameIC: string, 
 
         await WORKER_USER?.roles.add(ROOKIE_ROLE);
         await WORKER_USER?.roles.add(WORKER_ROLE);
+        await WORKER_USER?.setNickname(`${nicknameIC} | ${WORKER_USER.nickname}`);
         
         const PAYOUT_BUTTON = createButton("PRIMARY", "employment-payout", "Wypłać", "<:ilo_procent:1180622707700805783>")
         
