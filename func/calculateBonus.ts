@@ -16,7 +16,7 @@ const ROLES_ID = [
 export async function calculateBonus(interaction: ChatInputCommandInteraction, passedNumber: number, toReturn: string) {
     if (!interaction.isChatInputCommand() || interaction === undefined) return;
 
-    const USER_BANK_ACC = await getUserData(interaction.user.id);
+    const USER_BANK_ACC = await (getUserData(interaction.user.id));
 
     if (!USER_BANK_ACC) {
         interaction.reply({
