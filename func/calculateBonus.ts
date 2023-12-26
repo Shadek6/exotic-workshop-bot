@@ -4,6 +4,7 @@ import { client } from "../index";
 import { createButton } from "./utility/createButton";
 import { getUserData } from "./userData/getUserData";
 import { resolveError } from "./utility/resolveError";
+import { WorkerUser } from "../types/WorkerUser";
 
 const ROLES_ID = [
     [process.env.ROOKIE_ID, 0.4],
@@ -16,7 +17,7 @@ const ROLES_ID = [
 export async function calculateBonus(interaction: ChatInputCommandInteraction, passedNumber: number, toReturn: string) {
     if (!interaction.isChatInputCommand() || interaction === undefined) return;
 
-    const USER_BANK_ACC = await (getUserData(interaction.user.id));
+    const USER_BANK_ACC = (await getUserData(interaction.user.id)) as WorkerUser;
 
     if (!USER_BANK_ACC) {
         interaction.reply({
@@ -33,7 +34,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
         const BONUS_CHANNEL = client.channels.cache.get("1178750239251890266") as GuildTextBasedChannel;
         const NOW_DATE = new Date(Date.now()).toLocaleDateString("pl-PL");
         const NOW_HOURS = new Date().getUTCHours();
-        const NOW_MINUTES = new Date().getUTCMinutes();
+        const NOW_MINUTES = new Date().getUTCMinutes() < 10 ? `0${new Date().getUTCMinutes()}` : new Date().getUTCMinutes();
 
         if (CURRENT_ROLE != null) {
             const USER_PERCENT = role[1] as number;

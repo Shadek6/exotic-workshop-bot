@@ -4,10 +4,11 @@ import { client } from "..";
 import { createButton } from "./utility/createButton";
 import { resolveError } from "./utility/resolveError";
 import { getUserData } from "./userData/getUserData";
+import { WorkerUser } from "../types/WorkerUser";
 
 export async function addWorker(workerMention: UserMention, nicknameIC: string, interaction: ChatInputCommandInteraction) {
     const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
-    const USER_BANK_ACC = await getUserData(interaction.user.id)
+    const USER_BANK_ACC = await (getUserData(interaction.user.id)) as WorkerUser;
 
     if (!INTERACTION_USER?.roles.cache.has(process.env.CEO_ID!) && !INTERACTION_USER?.roles.cache.has(process.env.MANAGER_ID!)) {
         interaction.reply({ content: `Nie posiadasz uprawnień do tej komendy!`, ephemeral: true });
