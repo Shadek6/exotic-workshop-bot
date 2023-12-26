@@ -11,5 +11,8 @@
     "eslint": "^8.55.0",
     "mongodb": "^6.3.0",
     "node-cache": "^5.1.2"
+  },
+  "dependencies": {
+    "@types/node-cache": "^4.2.5"
   }
 }
