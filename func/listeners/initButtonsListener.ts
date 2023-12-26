@@ -60,7 +60,7 @@ export async function initButtonsListener() {
         if (interaction.customId === "payout-bonus") {
             const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
 
-            if (!INTERACTION_USER?.roles.cache.find((r) => r.name === "CEO") || !INTERACTION_USER?.roles.cache.find((r) => r.id === process.env.CEO_ID)) {
+            if (!INTERACTION_USER?.roles.cache.find((r) => r.name === "CEO") || !INTERACTION_USER?.roles.cache.find((r) => r.name === "Zarząd")) {
                 await interaction.reply({ content: `Nie posiadasz permisji pozwalających na zmianę statusu premii!`, ephemeral: true });
                 return;
             }
