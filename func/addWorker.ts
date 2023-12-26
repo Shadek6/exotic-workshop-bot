@@ -19,6 +19,7 @@ export async function addWorker(workerMention: UserMention, nicknameIC: string, 
     const WORKER_USER = interaction.guild?.members.cache.get(workerMention.substring(2, workerMention.length - 1));
     const ROOKIE_ROLE = interaction.guild?.roles.cache.get(process.env.ROOKIE_ID as string) as Role;
     const WORKER_ROLE = interaction.guild?.roles.cache.get(process.env.WORKER_ID as string) as Role;
+    const USER_NICKNAME = WORKER_USER?.nickname ? WORKER_USER?.nickname : WORKER_USER?.user.username;
 
     try {
         const GENERAL_CHANNEL = client.channels.cache.find((channel) => channel.id === "1178750677682507857") as GuildTextBasedChannel;
@@ -49,7 +50,7 @@ export async function addWorker(workerMention: UserMention, nicknameIC: string, 
 
         await WORKER_USER?.roles.add(ROOKIE_ROLE);
         await WORKER_USER?.roles.add(WORKER_ROLE);
-        await WORKER_USER?.setNickname(`${nicknameIC} | ${WORKER_USER.nickname}`);
+        await WORKER_USER?.setNickname(`${nicknameIC} | ${USER_NICKNAME}`);
         
         const PAYOUT_BUTTON = createButton("PRIMARY", "employment-payout", "Wypłać", "<:ilo_procent:1180622707700805783>")
         

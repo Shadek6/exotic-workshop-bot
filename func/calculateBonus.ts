@@ -33,7 +33,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
         const CURRENT_ROLE = fullUserInfo?.roles.cache.find((r) => r.id === role[0]);
         const BONUS_CHANNEL = client.channels.cache.get("1178750239251890266") as GuildTextBasedChannel;
         const NOW_DATE = new Date(Date.now()).toLocaleDateString("pl-PL");
-        const NOW_HOURS = new Date().getUTCHours();
+        const NOW_HOURS = new Date().getUTCHours() + 1;
         const NOW_MINUTES = new Date().getUTCMinutes() < 10 ? `0${new Date().getUTCMinutes()}` : new Date().getUTCMinutes();
 
         if (CURRENT_ROLE != null) {
@@ -47,7 +47,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
                     .setTitle(`Premia - ${(USER_PERCENT * 100).toFixed(0)}%`)
                     .setAuthor({ name: `${fullUserInfo?.nickname}`, iconURL: `${interaction.user.avatarURL()}` })
                     .addFields({ name: "Imię i nazwisko", value: `${USER_BANK_ACC.char_name}`, inline: true })
-                    .addFields({ name: "Data", value: `${NOW_DATE} ${NOW_HOURS + 1}:${NOW_MINUTES}`, inline: true })
+                    .addFields({ name: "Data", value: `${NOW_DATE} ${NOW_HOURS}:${NOW_MINUTES}`, inline: true })
                     .addFields({ name: "Robocizna", value: `$${passedNumber}`, inline: true })
                     .addFields({ name: "Premia", value: `$${USER_PAYOUT}`, inline: true })
                     .addFields({ name: "Numer konta", value: `${USER_BANK_ACC.account_number}`, inline: true })

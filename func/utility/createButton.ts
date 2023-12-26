@@ -10,7 +10,7 @@ type ButtonStyleString = "PRIMARY" | "SECONDARY" | "SUCCESS" | "DANGER" | "LINK"
  * @param BUTTON_EMOJI The emoji of the button
  * @returns A Discord.js ButtonBuilder
  */
-export function createButton(BUTTON_STYLE: ButtonStyleString, BUTTON_CUSTOM_ID?: string, BUTTON_LABEL?: string, BUTTON_EMOJI?: string) {
+export function createButton(BUTTON_STYLE: ButtonStyleString, BUTTON_CUSTOM_ID: string, BUTTON_LABEL: string, BUTTON_EMOJI?: string) {
     const newButton = new ButtonBuilder()
     
     switch(BUTTON_STYLE) {
