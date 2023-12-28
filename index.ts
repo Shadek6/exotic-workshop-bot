@@ -1,7 +1,5 @@
 import "dotenv/config";
-
 import { Client, GatewayIntentBits } from "discord.js";
-
 import { addUserData } from "./func/userData/addUserData";
 import { addWorker } from "./func/addWorker";
 import { calculateBonus } from "./func/calculateBonus";
