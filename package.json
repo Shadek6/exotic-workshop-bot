@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "pm2 start ./production/index.js",
+    "dev": "pm2 start ./production/index.js -f",
     "depcom": "node deploy-commands.js"
   },
   "devDependencies": {

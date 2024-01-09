@@ -58,7 +58,7 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
                 const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>().addComponents(CLOSE_BUTTON);
                 const BONUS_MESSAGE = await BONUS_CHANNEL.send({ embeds: [BONUS_EMBED], components: [BUTTONS_ROW] });
 
-                await interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${BONUS_MESSAGE.id}\``, ephemeral: true });
+                await interaction.reply({ content: `Poprawnie dodano wiadomość na kanał Premie! ID Wiadomości: \`${await BONUS_MESSAGE.id}\``, ephemeral: true });
             } catch (error) {
                 return resolveError("calculateBonus.ts", error);
             }

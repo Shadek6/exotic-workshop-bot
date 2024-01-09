@@ -37,30 +37,29 @@ export async function initButtonsListener() {
 
         if (interaction.customId === "close-tuning-ticket") {
             const interaction_channel = interaction.guild?.channels.cache.find((c) => c.id === interaction.channel!.id) as GuildChannel;
-            
-            if(interaction_channel.parentId === "1180633766713106443") {
-                await interaction.reply({ content: "Closing ticket...", ephemeral: true })
-                setTimeout(() => interaction_channel.delete(), 1000)
-            }
-            else {
-            interaction.reply({ content: "Closing ticket...", ephemeral: true }).then((message) => {
-                setTimeout(async () => {
-                    message.delete();
-                    const TICKET_CHANNEL = interaction.guild!.channels.cache.find((c) => c.id === interaction.channel!.id) as GuildChannel;
 
-                    TICKET_CHANNEL.setParent("1180633766713106443");
-                    TICKET_CHANNEL.lockPermissions();
-                    await logMessage(0, interaction.user.username, "Ticket Closed", `Użytkownik zamknął ticket!`, interaction.user.id);
-                    return;
-                }, 1000);
-            });
+            if (interaction_channel.parentId === "1180633766713106443") {
+                await interaction.reply({ content: "Closing ticket...", ephemeral: true });
+                setTimeout(() => interaction_channel.delete(), 1000);
+            } else {
+                interaction.reply({ content: "Closing ticket...", ephemeral: true }).then((message) => {
+                    setTimeout(async () => {
+                        message.delete();
+                        const TICKET_CHANNEL = interaction.guild!.channels.cache.find((c) => c.id === interaction.channel!.id) as GuildChannel;
+
+                        TICKET_CHANNEL.setParent("1180633766713106443");
+                        TICKET_CHANNEL.lockPermissions();
+                        await logMessage(0, interaction.user.username, "Ticket Closed", `Użytkownik zamknął ticket!`, interaction.user.id);
+                        return;
+                    }, 1000);
+                });
             }
         }
 
         if (interaction.customId === "payout-bonus") {
             const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
 
-            if (!INTERACTION_USER?.roles.cache.find((r) => r.name === "CEO") && !INTERACTION_USER?.roles.cache.find((r) => r.id === process.env.CEO_ID)) {
+            if (!INTERACTION_USER?.roles.cache.some((r) => r.name === "CEO" || r.id === process.env.CEO_ID)) {
                 await interaction.reply({ content: `Nie posiadasz permisji pozwalających na zmianę statusu premii!`, ephemeral: true });
                 return;
             }
@@ -77,8 +76,8 @@ export async function initButtonsListener() {
 
             const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
 
-            if (EMBED_AUTHOR !== undefined) {
-                const USER_DM = await EMBED_AUTHOR?.createDM(true);
+            if (EMBED_AUTHOR) {
+                const USER_DM = await EMBED_AUTHOR.createDM(true);
 
                 const THANKS_EMBED = new EmbedBuilder()
                     .setColor("Random")
@@ -96,11 +95,11 @@ export async function initButtonsListener() {
             await interaction.reply({ content: `Nie udało się wysłać wiadomości do użytkownika!`, ephemeral: true });
             await interaction.message.edit({ embeds: [MESSAGE_EMBED] });
         }
-    
-        if(interaction.customId === "verify") {
+
+        if (interaction.customId === "verify") {
             const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
 
-            if(INTERACTION_USER?.roles.cache.has(process.env.VERIFIED_ID as string)) {
+            if (INTERACTION_USER?.roles.cache.has(process.env.VERIFIED_ID as string)) {
                 await interaction.reply({ content: `Posiadasz już rolę \`Klient\`!`, ephemeral: true });
                 return;
             }
@@ -113,26 +112,25 @@ export async function initButtonsListener() {
             }
         }
 
-        if(interaction.customId === "employment-payout") 
-        {
+        if (interaction.customId === "employment-payout") {
             const INTERACTION_USER = interaction.guild?.members.cache.get(interaction.user.id);
-            if(!INTERACTION_USER?.roles.cache.has(process.env.CEO_ID as string)) {
+            if (!INTERACTION_USER?.roles.cache.has(process.env.CEO_ID as string)) {
                 await interaction.reply({ content: `Nie masz dostępu do tej akcji!`, ephemeral: true });
                 return;
             }
 
             const MESSAGE_EMBED = interaction.message.embeds[0];
-            if(MESSAGE_EMBED.fields[0].value !== "<:timescircle:1181629847911546920>") {
+            if (MESSAGE_EMBED.fields[0].value !== "<:timescircle:1181629847911546920>") {
                 await interaction.reply({ content: `Ta wypłata została już wypłacona!`, ephemeral: true });
                 return;
             }
-            
+
             MESSAGE_EMBED.fields[0].value = "<:checksquare:1181629839279652924>";
             await interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true });
-            
+
             const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
-            
-            if(EMBED_AUTHOR !== undefined) {
+
+            if (EMBED_AUTHOR !== undefined) {
                 const USER_DM = await EMBED_AUTHOR?.createDM(true);
 
                 const THANKS_EMBED = new EmbedBuilder()
