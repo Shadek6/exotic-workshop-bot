@@ -52,7 +52,8 @@ export async function calculateBonus(interaction: ChatInputCommandInteraction, p
                     .addFields({ name: "Premia", value: `$${USER_PAYOUT}`, inline: true })
                     .addFields({ name: "Numer konta", value: `${USER_BANK_ACC.account_number}`, inline: true })
                     .addFields({ name: "Zwrot", value: `${toReturn}`, inline: true })
-                    .addFields({ name: "Status", value: "<:timescircle:1181629847911546920>", inline: false });
+                    .addFields({ name: "Status", value: "<:timescircle:1181629847911546920>", inline: false })
+                    .addFields({ name: "Wypłacone przez", value: "-", inline: true });
 
                 const CLOSE_BUTTON = createButton("PRIMARY", "payout-bonus", "Wypłać", "<:ilo_procent:1180622707700805783>");
                 const BUTTONS_ROW = new ActionRowBuilder<ButtonBuilder>().addComponents(CLOSE_BUTTON);

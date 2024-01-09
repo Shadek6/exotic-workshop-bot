@@ -6,7 +6,6 @@ import { createTuningTicket } from "../tickets/createTuningTicket";
 import { createWorkTicket } from "../tickets/createWorkTicket";
 import { logMessage } from "../logMessage";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function initButtonsListener() {
     client.on("interactionCreate", async (interaction: Interaction) => {
         if (interaction.isChatInputCommand()) return;
@@ -73,6 +72,7 @@ export async function initButtonsListener() {
 
             await interaction.reply({ content: `Zmieniam status na \`WYPŁACONY\``, ephemeral: true });
             MESSAGE_EMBED.fields[6].value = "<:checksquare:1181629839279652924>";
+            MESSAGE_EMBED.fields[7].value = `**${INTERACTION_USER.nickname ?? interaction.user.username}**`
 
             const EMBED_AUTHOR = interaction.guild?.members.cache.find((u) => u.nickname === MESSAGE_EMBED.author?.name);
 
