@@ -19,10 +19,10 @@ export class DatabaseController
     {
         if(filter) 
         {
-            if(cache.has(JSON.stringify(filter))) return cache.get(JSON.stringify(filter))
+            if(cache.has(JSON.stringify(filter))) return (cache.get(JSON.stringify(filter)) as PayoutProps)
             let data = await this.client.db(this.db).collection(collection).findOne(filter) as PayoutProps | null
             if(!data) return null;
-            
+
             data = {...data, bonus_percentage: 0.5}
             cache.set(JSON.stringify(filter), data)
             return data;
