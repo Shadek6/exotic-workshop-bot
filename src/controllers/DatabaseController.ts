@@ -1,4 +1,7 @@
 import { MongoClient } from "mongodb"
+import NodeCache from 'node-cache'
+
+const cache = new NodeCache();
 export class DatabaseController 
 {
     connect_string: string
@@ -13,7 +16,15 @@ export class DatabaseController
 
     public async fetchDatabaseData(collection: string, filter?: object) 
     {
-        if(filter) return await this.client.db(this.db).collection(collection).findOne(filter)
+        if(filter) 
+        {
+            if(cache.has(JSON.stringify(filter))) return cache.get(JSON.stringify(filter))
+            const data = await this.client.db(this.db).collection(collection).findOne(filter)
+            if(!data) return null;
+
+            cache.set(JSON.stringify(filter), data)
+            return data;
+        }
 
         return await this.client.db(this.db).collection(collection).findOne()
     }
