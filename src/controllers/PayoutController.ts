@@ -12,7 +12,7 @@ export class PayoutController {
     }
 
     public async calculateBonus(user_id: string, passedNumber: number, toReturn: string) {
-        const fetchedWorker = await databaseController.fetchDatabaseData("workers", { user_id: user_id });
+        const fetchedWorker = await databaseController.fetchDatabaseData("workers", { user_id: user_id }) as PayoutProps;
         const guildMember = await client.guilds.cache.get(process.env.GUILD_ID!)?.members.cache.get(user_id);
 
         if (!guildMember?.roles.cache.some((r) => r.id === process.env.BASE_WORKER_ROLE_ID)) return "PayoutController:calculateBonus - User is not a worker";
@@ -26,7 +26,7 @@ export class PayoutController {
             char_name: fetchedWorker.char_name,
             account_number: fetchedWorker.account_number,
             phone_number: fetchedWorker.phone_number,
-            message_id: fetchedWorker.message_id,
+            message_id: fetchedWorker.message_id
         };
 
         const memberRoles = guildMember.roles.cache;
