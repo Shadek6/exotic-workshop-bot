@@ -5,6 +5,7 @@ import { WorkersController } from './controllers/WorkersController';
 import { ChatCommandsController } from './controllers/ChatCommandsController';
 import { PayoutController } from './controllers/PayoutController';
 import { ButtonsController } from './controllers/ButtonsController';
+import { TicketsController } from './controllers/TicketsController';
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent],
@@ -15,6 +16,7 @@ const workersController = new WorkersController();
 const chatCommandsController = new ChatCommandsController();
 const payoutController = new PayoutController();
 const buttonsController = new ButtonsController();
+const ticketsController = new TicketsController();
 
 client.on("ready", () => {
     console.log("Bot is ready!");
@@ -22,5 +24,5 @@ client.on("ready", () => {
     buttonsController.init();
 });
 
-export { client, databaseController, workersController, payoutController }
+export { client, databaseController, workersController, payoutController, ticketsController }
 client.login(process.env.TOKEN);

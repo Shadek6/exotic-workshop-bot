@@ -1,5 +1,5 @@
 import { Interaction } from "discord.js";
-import { client, workersController } from "../index"
+import { client, ticketsController, workersController } from "../index"
 import { evaluateString } from "../func/evaluateString";
 import { payoutController } from "../index";
 export class ChatCommandsController 
@@ -76,6 +76,21 @@ export class ChatCommandsController
                     {
                         interaction.reply({ content: "Nie udało się wysłać premii!", ephemeral: true })
                     }
+                    break;
+                }
+
+                case "send-panel": 
+                {
+                    const panelResult = await ticketsController.sendTicketPanel(interaction.user.id, interaction.channel!.id)
+                    if(panelResult === "TicketsController:sendTicketPanel - Ticket panel sent") 
+                    {
+                        interaction.reply({ content: "Panel został wysłany!", ephemeral: true })
+                    }
+                    else 
+                    {
+                        interaction.reply({ content: "Nie udało się wysłać panelu!", ephemeral: true })
+                    }
+                    break;
                 }
             }
         })
