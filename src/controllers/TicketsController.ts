@@ -6,10 +6,7 @@ import { createButton } from "../func/util/createButton";
 export class TicketsController {
     constructor() {}
 
-    public async sendTicketPanel(user_id: string, channel_id: string) {
-        const fetchedUser = client.guilds.cache.get(process.env.GUILD_ID!)?.members.cache.get(user_id) as GuildMember;
-        if (!fetchedUser.roles.cache.some((role) => role.id === process.env.CEO_ID!)) return "TicketsController:sendTicketPanel - User is not CEO";
-
+    public async sendTicketPanel(channel_id: string) {
         const clientGuild = client.guilds.cache.get(process.env.GUILD_ID!);
         if (!clientGuild) return "TicketsController:sendTicketPanel - Guild not found";
 

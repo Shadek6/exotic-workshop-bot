@@ -24,7 +24,7 @@ export class DatabaseController
             if(!data) return null;
 
             data = {...data, bonus_percentage: 0.5}
-            cache.set(JSON.stringify(filter), data)
+            cache.set(JSON.stringify(filter), data, 180)
             return data;
         }
 

@@ -5,6 +5,7 @@ import { databaseController } from "../index";
 export class WorkersController {
     public async addWorker(user_id: string, nickname_ic: string) {
         if (user_id === undefined || nickname_ic === null) return "WorkersController:addWorker - Missing arguments";
+
         const Worker = client.guilds.cache.get(process.env.GUILD_ID!)?.members.cache.get(user_id) as GuildMember;
         if (!Worker) return "WorkersController:addWorker - Worker not found";
 
@@ -21,12 +22,15 @@ export class WorkersController {
 
     public async registerWorker(char_name: string, phone_number: string, account_number: string, user_id: string) 
     {
+        const contactChannel = client.channels.cache.get(process.env.CONTACT_CHANNEL_ID!) as TextBasedChannel;
+        const fetchedUser = client.guilds.cache.get(process.env.GUILD_ID!)?.members.cache.get(user_id);
+
+        if(!fetchedUser) return "WorkersController:registerWorker - Worker not found";
+
         if(!phone_number || !account_number || !char_name) return "WorkersController:registerWorker - Missing arguments";
         if(!char_name.includes(" ") || phone_number.length !== 6 || account_number.length !== 10) return "WorkersController:registerWorker - Invalid arguments";
         if(await databaseController.fetchDatabaseData("workers", { user_id: user_id })) return "WorkersController:registerWorker - Worker already exists";
 
-        const contactChannel = client.channels.cache.get(process.env.CONTACT_CHANNEL_ID!) as TextBasedChannel;
-        const fetchedUser = client.guilds.cache.get(process.env.GUILD_ID!)?.members.cache.get(user_id) as GuildMember;
 
         const WorkerEmbed = new EmbedBuilder()
             .setTitle(fetchedUser.user.username)
@@ -44,12 +48,12 @@ export class WorkersController {
 
     public async unregisterWorker(user_id: string) 
     {
-        const contactChannel = client.channels.cache.get(process.env.CONTACT_CHANNEL_ID!) as TextBasedChannel;
+        //  const contactChannel = client.channels.cache.get(process.env.CONTACT_CHANNEL_ID!) as TextBasedChannel;
         const fetchedUser = await databaseController.fetchDatabaseData("workers", { user_id: user_id });
 
         if(!fetchedUser) return "WorkersController:unregisterWorker - Worker not found";
 
-        contactChannel.messages.delete(fetchedUser.message_id);
+        //  contactChannel.messages.delete(fetchedUser.message_id);
         if(await databaseController.deleteDatabaseData("workers", { user_id: user_id })) return "WorkersController:unregisterWorker - Worker unregistered";
         else return "WorkersController:unregisterWorker - Worker not unregistered";
     }
