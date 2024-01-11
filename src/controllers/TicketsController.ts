@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ChannelType, EmbedBuilder, GuildChannel, GuildMember, Message, OverwriteResolvable, TextBasedChannel } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, CategoryChannel, ChannelType, EmbedBuilder, Guild, GuildChannel, GuildMember, Message, OverwriteResolvable, TextBasedChannel } from "discord.js";
 import { client } from "..";
 import { TicketType } from "../types/TicketType";
 import { createButton } from "../func/util/createButton";
@@ -26,13 +26,29 @@ export class TicketsController {
         }
     }
     public async createTicket(user_id: string, ticketType: TicketType, accessRoles: string[]) {
-        const clientGuild = client.guilds.cache.get(process.env.GUILD_ID!);
+        const clientGuild = client.guilds.cache.get(process.env.GUILD_ID!)!;
         const ticketCategory = process.env.TICKET_CATEGORY;
         const ticketAuthor = clientGuild ? clientGuild.members.cache.get(user_id) : null;
 
         if (!ticketCategory) return "TicketsController:createTicket - Ticket category not found";
         if (!ticketAuthor) return "TicketsController:createTicket - Ticket author not found";
 
+        const TicketChannel = await this.createTicketChannelWithAccessOverwrites(clientGuild!, ticketType, ticketAuthor!, clientGuild.channels.cache.get(ticketCategory) as CategoryChannel, accessRoles, user_id);
+
+        if (!TicketChannel) return "TicketsController:createTicket - Ticket channel not created";
+
+        const ActionRow = new ActionRowBuilder<ButtonBuilder>();
+        const CloseButton = createButton("DANGER", `close-ticket`, "Zamknij Ticket", "🔒");
+        ActionRow.addComponents(CloseButton);
+
+        if (await TicketChannel.send({ embeds: [this.buildTicketEmbed(ticketType, ticketAuthor)], content: `<@!${user_id}>`, components: [ActionRow] })) {
+            return "TicketsController:createTicket - Ticket sent";
+        } else {
+            return "TicketsController:createTicket - Ticket not sent";
+        }
+    }
+
+    private async createTicketChannelWithAccessOverwrites(clientGuild: Guild, ticketType: TicketType, ticketAuthor: GuildMember, ticketCategory: CategoryChannel, accessRoles: string[], user_id: string) {
         const accessOverwrites: OverwriteResolvable[] = [];
         accessRoles.forEach((role) => {
             const clientRole = clientGuild?.roles.cache.get(role);
@@ -41,8 +57,8 @@ export class TicketsController {
                 allow: ["ViewChannel"],
             });
         });
-
-        const TicketChannel = await clientGuild?.channels.create({
+    
+        return await clientGuild?.channels.create({
             name: `${ticketType}-${ticketAuthor.user.username}`,
             type: ChannelType.GuildText,
             parent: ticketCategory,
@@ -58,18 +74,6 @@ export class TicketsController {
                 },
             ],
         });
-
-        if (!TicketChannel) return "TicketsController:createTicket - Ticket channel not created";
-
-        const ActionRow = new ActionRowBuilder<ButtonBuilder>();
-        const CloseButton = createButton("DANGER", `close-ticket`, "Zamknij Ticket", "🔒");
-        ActionRow.addComponents(CloseButton);
-
-        if (await TicketChannel.send({ embeds: [this.buildTicketEmbed(ticketType, ticketAuthor)], content: `<@!${user_id}>`, components: [ActionRow] })) {
-            return "TicketsController:createTicket - Ticket sent";
-        } else {
-            return "TicketsController:createTicket - Ticket not sent";
-        }
     }
 
     private buildTicketEmbed(ticketType: TicketType, ticketAuthor: GuildMember) {
