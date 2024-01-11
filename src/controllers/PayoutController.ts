@@ -68,7 +68,6 @@ export class PayoutController {
 
     public async updateBonusStatus(user_id: string, buttonMessage: Message) {
         const interactionUser = client.guilds.cache.get(process.env.GUILD_ID!)?.members.cache.get(user_id) as GuildMember;
-        if (!interactionUser.roles.cache.some((r) => r.id === process.env.CEO_ID! || process.env.MANAGEMENT_ID!)) return "PayoutController:updateBonusStatus - No permission";
         const newEmbed = buttonMessage.embeds[0];
 
         if (newEmbed.fields[6].value !== "<:timescircle:1181629847911546920>") {
@@ -79,9 +78,11 @@ export class PayoutController {
         newEmbed.fields[7].value = `**${interactionUser.nickname ?? interactionUser.user.username}**`;
 
         const embedAuthor = interactionUser.guild.members.cache.find((u) => u.nickname === newEmbed.author?.name);
+        const authorAvatar = newEmbed.author?.iconURL;
+        
         const thanksEmbed = new EmbedBuilder()
             .setColor("Random")
-            .setAuthor({ name: `${embedAuthor?.nickname}`, iconURL: `${embedAuthor?.displayAvatarURL()}` })
+            .setAuthor({ name: `${embedAuthor?.nickname}`, iconURL: authorAvatar })
             .setTitle("Premia Wypłacona")
             .setDescription(`Twoja premia w wysokości \`${newEmbed.fields[3].value}\` została przekazana na Twoje konto! Dziękujemy za pracę w **Exotic Workshop**!`)
             .setImage(process.env.EXOTIC_LOGO as string);

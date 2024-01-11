@@ -14,7 +14,7 @@ export class ButtonsController {
 
             switch (interaction.customId) {
                 case "payout-bonus": {
-                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!, process.env.MANAGEMENT_ID!])
+                    const permissionsCheck = checkForPermissions(interaction.member, [], [process.env.CEO_ID!, process.env.MANAGEMENT_ID!])
 
                     if(!permissionsCheck || typeof(permissionsCheck) === "string") {
                         await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true })
