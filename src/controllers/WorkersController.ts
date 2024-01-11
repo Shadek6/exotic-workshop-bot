@@ -48,12 +48,12 @@ export class WorkersController {
 
     public async unregisterWorker(user_id: string) 
     {
-        //  const contactChannel = client.channels.cache.get(process.env.CONTACT_CHANNEL_ID!) as TextBasedChannel;
+        const contactChannel = client.channels.cache.get(process.env.CONTACT_CHANNEL_ID!) as TextBasedChannel;
         const fetchedUser = await databaseController.fetchDatabaseData("workers", { user_id: user_id });
 
         if(!fetchedUser) return "WorkersController:unregisterWorker - Worker not found";
 
-        //  contactChannel.messages.delete(fetchedUser.message_id);
+        contactChannel.messages.delete(fetchedUser.message_id);
         if(await databaseController.deleteDatabaseData("workers", { user_id: user_id })) return "WorkersController:unregisterWorker - Worker unregistered";
         else return "WorkersController:unregisterWorker - Worker not unregistered";
     }
