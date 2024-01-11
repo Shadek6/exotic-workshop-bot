@@ -6,6 +6,7 @@ import { ChatCommandsController } from './controllers/ChatCommandsController';
 import { PayoutController } from './controllers/PayoutController';
 import { ButtonsController } from './controllers/ButtonsController';
 import { TicketsController } from './controllers/TicketsController';
+import { VerifyController } from './controllers/VerifyController';
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildBans, GatewayIntentBits.MessageContent],
@@ -17,6 +18,7 @@ const chatCommandsController = new ChatCommandsController();
 const payoutController = new PayoutController();
 const buttonsController = new ButtonsController();
 const ticketsController = new TicketsController();
+const verifyController = new VerifyController();
 
 client.on("ready", () => {
     console.log("Bot is ready!");
@@ -24,5 +26,5 @@ client.on("ready", () => {
     buttonsController.init();
 });
 
-export { client, databaseController, workersController, payoutController, ticketsController }
+export { client, databaseController, workersController, payoutController, ticketsController, verifyController }
 client.login(process.env.TOKEN);

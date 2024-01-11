@@ -25,8 +25,7 @@ export function checkForPermissions(user: unknown, permissions?: PermissionResol
             if (fetchedRoles?.has(role)) rolesCheck.push(true);
             else rolesCheck.push(false);
         }
-
-        console.log(rolesCheck);
+        
         if (rolesCheck.includes(true)) return true;
         else return false;
     }

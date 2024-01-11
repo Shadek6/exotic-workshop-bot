@@ -1,6 +1,7 @@
 import { Interaction } from "discord.js";
-import { client, payoutController, ticketsController } from "..";
+import { client, payoutController, ticketsController, verifyController } from "..";
 import { TicketType } from "../types/TicketType";
+import { checkForPermissions } from "../func/util/checkForPermissions";
 
 export class ButtonsController {
     constructor() {}
@@ -13,6 +14,13 @@ export class ButtonsController {
 
             switch (interaction.customId) {
                 case "payout-bonus": {
+                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!, process.env.MANAGEMENT_ID!])
+
+                    if(!permissionsCheck || typeof(permissionsCheck) === "string") {
+                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true })
+                        break;
+                    }
+
                     const payoutResult = await payoutController.updateBonusStatus(interaction.user.id, interaction.message);
                     if (payoutResult === "PayoutController:updateBonusStatus - Bonus paid") {
                         await interaction.reply({ content: "Bonus został wypłacony!", ephemeral: true });
@@ -21,6 +29,10 @@ export class ButtonsController {
                 }
 
                 case "verify": {
+                    const verifyResult = await verifyController.grantAccess(interaction.user.id);
+
+                    if(verifyResult === "VerifyController:grantAccess - Access granted") await interaction.reply({ content: "Dostęp został przyznany!", ephemeral: true })
+                    else await interaction.reply({ content: "Nie udało się przyznać dostępu!", ephemeral: true });
 
                     break;
                 }

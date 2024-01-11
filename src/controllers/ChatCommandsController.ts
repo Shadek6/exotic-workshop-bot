@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, Interaction } from "discord.js";
-import { client, ticketsController, workersController } from "../index";
+import { client, ticketsController, verifyController, workersController } from "../index";
 import { evaluateString } from "../func/evaluateString";
 import { payoutController } from "../index";
 import { checkForPermissions } from "../func/util/checkForPermissions";
@@ -14,10 +14,10 @@ export class ChatCommandsController {
 
             switch (interaction.commandName) {
                 case "add-worker": {
-                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!, process.env.MANAGEMENT_ID!, process.env.MANAGER_ID!])
+                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!, process.env.MANAGEMENT_ID!, process.env.MANAGER_ID!]);
 
-                    if(!permissionsCheck || typeof(permissionsCheck) === "string") {
-                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true })
+                    if (!permissionsCheck || typeof permissionsCheck === "string") {
+                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true });
                         break;
                     }
 
@@ -32,10 +32,10 @@ export class ChatCommandsController {
                 }
 
                 case "register": {
-                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.BASE_WORKER_ROLE_ID!])
+                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.BASE_WORKER_ROLE_ID!]);
 
-                    if(!permissionsCheck || typeof(permissionsCheck) === "string") {
-                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true })
+                    if (!permissionsCheck || typeof permissionsCheck === "string") {
+                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true });
                         break;
                     }
 
@@ -52,13 +52,13 @@ export class ChatCommandsController {
                 }
 
                 case "unregister": {
-                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.BASE_WORKER_ROLE_ID!])
+                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.BASE_WORKER_ROLE_ID!]);
 
-                    if(!permissionsCheck || typeof(permissionsCheck) === "string") {
-                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true })
+                    if (!permissionsCheck || typeof permissionsCheck === "string") {
+                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true });
                         break;
                     }
-                    
+
                     const user_id = interaction.options.getString("user_id")!;
                     const unregisterWorkerResult = await workersController.unregisterWorker(user_id);
                     if (unregisterWorkerResult === "WorkersController:unregisterWorker - Worker unregistered")
@@ -84,16 +84,30 @@ export class ChatCommandsController {
                 }
 
                 case "send-panel": {
-                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!])
+                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!]);
 
-                    if(!permissionsCheck || typeof(permissionsCheck) === "string") {
-                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true })
+                    if (!permissionsCheck || typeof permissionsCheck === "string") {
+                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true });
                         break;
                     }
 
                     const panelResult = await ticketsController.sendTicketPanel(interaction.channel!.id);
                     if (panelResult === "TicketsController:sendTicketPanel - Ticket panel sent") interaction.reply({ content: "Panel został wysłany!", ephemeral: true });
                     else await interaction.reply({ content: "Nie udało się wysłać panelu!", ephemeral: true });
+                    break;
+                }
+
+                case "send-verify": {
+                    const permissionsCheck = checkForPermissions(interaction.member!, [], [process.env.CEO_ID!]);
+
+                    if (!permissionsCheck || typeof permissionsCheck === "string") {
+                        await interaction.reply({ content: "Nie masz uprawnień do tej komendy!", ephemeral: true });
+                        break;
+                    }
+
+                    const sendVerifyResult = await verifyController.sendVerify(interaction.channel!.id);
+                    if (sendVerifyResult === "VerifyController:sendVerify - Verify sent") interaction.reply({ content: "Weryfikacja została wysłana!", ephemeral: true });
+                    else await interaction.reply({ content: "Nie udało się wysłać weryfikacji!", ephemeral: true });
                     break;
                 }
             }
